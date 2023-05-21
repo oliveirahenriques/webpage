@@ -1,0 +1,327 @@
+---
+title: "Simulation Results"
+subtitle: 'GARCH-based Asymmetric Least Squares Risk Measures'
+author: Victor Henriques
+format: 
+  revealjs:
+    smaller: true
+    scrollable: true
+bibliography: references.bib
+editor_options: 
+  chunk_output_type: console
+---
+
+## Simulation
+
+-   The DGP follows @christoffersen2004estimation and @gao2008estimation
+
+-   We simulate daily returns from GARCH-$t(8)$ and GARCH-$t(500)$
+
+    -   Unconditional volatility: $\omega = 20^2/252\times (1-\alpha-\beta)$ for each simulation
+
+-   We explore three distinct cases: Benchmark, High and Low persistence:
+
+    -   Benchmark (BM): $\alpha = 0.10$ and $\beta = 0.80$
+
+    -   High persistence (HP): $\alpha = 0.10$ and $\beta = 0.89$
+
+    -   Low persistence (LP): $\alpha = 0.10$ and $\beta = 0.40$
+
+-   We simulate $N = 10.000$ paths of size $T = 1000$, burning the first $1.000$ realizations
+
+-   We compute the risk measures at $\tau =\{1\%,2.5\%,5\%,10\%,25\%,50\%\}$
+
+## To do list
+
+-   Compute the risk measures via bootstrap (**Available for Benchmark and HP**).
+
+-   Compute the relative distribution $\xi_{\tau}^{*} = \widehat{\xi}_{\tau}/\xi_{\tau}$ (**Available for Benchmark and HP**).
+
+-   For each simulation, compute the risk measures using $T = 500$ (**Bootstrap is not available**).
+
+-   Estimate GARCH with ML with t-Student innovations. (**Available for Benchmark and HP**)
+
+-   Simulate homoscedastic daily returns from $t(8)$ and $t(500)$. (**Bootstrap is not available**)
+
+## Simulation Results: Benckmark
+
+```{r}
+load('risk_data.RData')
+
+library(tidyverse)
+
+library(kableExtra)
+
+library(moments)
+```
+
+::: panel-tabset
+### Gaussian
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('Benchmark')) %>% 
+  filter(method %in% c('Bootstrap','MLE','QMLE','Simulation')) %>% 
+  filter(distribution %in% c('Gaussian')) %>% 
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### t
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('Benchmark')) %>% 
+  filter(method %in% c('Bootstrap','MLE','QMLE','Simulation')) %>% 
+  filter(distribution %in% c('t-Student')) %>% 
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### Relative Gaussian
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('Benchmark')) %>% 
+  filter(method %in% c('Relative MLE','Relative QMLE','Relative Bootstrap')) %>% 
+  filter(distribution %in% c('Gaussian')) %>% 
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### Relative t
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('Benchmark')) %>% 
+  filter(distribution %in% c('t-Student')) %>% 
+  filter(method %in% c('Relative MLE','Relative QMLE','Relative Bootstrap')) %>%
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### SQ Gauss
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('Benchmark')) %>% 
+  filter(distribution %in% c('Gaussian')) %>% 
+  filter(method %in% c('SQ Relative MLE','SQ Relative QMLE','SQ Relative Bootstrap')) %>%
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### SQ t
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('Benchmark')) %>% 
+  filter(distribution %in% c('t-Student')) %>% 
+  filter(method %in% c('SQ Relative MLE','SQ Relative QMLE','SQ Relative Bootstrap')) %>%
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### Summary
+
+```{r}
+risk_data %>%
+  filter(simulation %in% c('Benchmark')) %>% 
+  filter(level %in% c('0.010','0.050')) %>%     
+  group_by(data,simulation,distribution,method,size,measure,level) %>%
+  summarise_at(vars(estimate),
+               .funs =
+                 list(
+                   min = ~ min(.,na.rm = TRUE),
+                   percent_25 = ~ quantile(. , probs = 0.25,na.rm = TRUE),
+                   median = ~ quantile(. , probs = 0.50,na.rm = TRUE),
+                   percent_75 = ~ quantile(. , probs = 0.75,na.rm = TRUE),
+                   max = ~ max(.,na.rm = TRUE),
+                   average = ~ mean(.,na.rm = TRUE),
+                   sd = ~ sd(.,na.rm = TRUE),
+                   skew = ~ skewness(.,na.rm = TRUE),
+                   kurt = ~ kurtosis(.,na.rm = TRUE))) %>% 
+  kable(digits = 3) %>% 
+  kable_styling(font_size = 14)
+```
+:::
+
+## Simulation Results: High persistence
+
+::: panel-tabset
+### Gaussian
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('High persistence')) %>% 
+  filter(method %in% c('Bootstrap','MLE','QMLE','Simulation')) %>% 
+  filter(distribution %in% c('Gaussian')) %>% 
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### t
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('High persistence')) %>% 
+  filter(method %in% c('Bootstrap','MLE','QMLE','Simulation')) %>% 
+  filter(distribution %in% c('t-Student')) %>% 
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### Relative Gaussian
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('High persistence')) %>% 
+  filter(method %in% c('Relative MLE','Relative QMLE','Relative Bootstrap')) %>% 
+  filter(distribution %in% c('Gaussian')) %>% 
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### Relative t
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('High persistence')) %>% 
+  filter(method %in% c('Relative MLE','Relative QMLE','Relative Bootstrap')) %>% 
+  filter(distribution %in% c('t-Student')) %>% 
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### SQ Gauss
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('High persistence')) %>% 
+  filter(distribution %in% c('Gaussian')) %>% 
+  filter(method %in% c('SQ Relative MLE','SQ Relative QMLE','SQ Relative Bootstrap')) %>%
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### SQ t
+
+```{r}
+risk_data %>% 
+  filter(simulation %in% c('High persistence')) %>% 
+  filter(distribution %in% c('t-Student')) %>% 
+  filter(method %in% c('SQ Relative MLE','SQ Relative QMLE','SQ Relative Bootstrap')) %>%
+  filter(level %in% c('0.010','0.050')) %>%     
+  ggplot(aes(estimate)) +
+  geom_histogram(aes(fill = method), color = 'white', position = 'identity') +
+  #scale_fill_brewer(palette="Spectral") +
+  theme_bw() + 
+  facet_grid(size ~ measure + level, scales = 'free') +
+  theme(legend.title = element_blank(),
+        legend.position = 'bottom')
+```
+
+### Summary
+
+```{r}
+risk_data %>%
+  filter(simulation %in% c('High persistence')) %>% 
+  filter(level %in% c('0.010','0.050')) %>%     
+  group_by(data,simulation,distribution,method,size,measure,level) %>%
+  summarise_at(vars(estimate),
+               .funs =
+                 list(
+                   min = ~ min(.,na.rm = TRUE),
+                   percent_25 = ~ quantile(. , probs = 0.25,na.rm = TRUE),
+                   median = ~ quantile(. , probs = 0.50,na.rm = TRUE),
+                   percent_75 = ~ quantile(. , probs = 0.75,na.rm = TRUE),
+                   max = ~ max(.,na.rm = TRUE),
+                   average = ~ mean(.,na.rm = TRUE),
+                   sd = ~ sd(.,na.rm = TRUE),
+                   skew = ~ skewness(.,na.rm = TRUE),
+                   kurt = ~ kurtosis(.,na.rm = TRUE))) %>% 
+  kable(digits = 3) %>% 
+  kable_styling(font_size = 14)
+```
+:::
+
+## Bootstrap
+
+-   Estimate GARCH by ML and compute (centered) standardized residuals $\hat{\varepsilon}_{t}^{*} = \hat{\varepsilon}_{t} (-\bar{\varepsilon})$
+
+-   Generate bootstrap samples: $L_{t}^{*}=\varepsilon_{t}^{*} \widehat{\sigma}_{t}^{*}$, with $\widehat{\sigma}_{t}^{* 2}=\widehat{\omega}+\widehat{\alpha} L_{t-1}^{* 2}+\widehat{\beta} \widehat{\sigma}_{t-1}^{* 2}$ where $\varepsilon_{t}^{*}$ are random draws with replacement from $\widehat{F}_{\hat{\varepsilon}_{t}^{*}}$ and $\widehat{\sigma}_{1}^{*2}= \widehat{\sigma}_{1}^{2}=\widehat{\omega} /(1-\widehat{\alpha}-\widehat{\beta})$.
+
+-   Compute MLE for each bootstrap sample: $\widehat{\theta}^{*}=\left(\widehat{\omega}^{*}, \widehat{\alpha}^{*}, \widehat{\beta}^{*}\right)$.
+
+-   Compute one-step-ahead volatility prediction: $\widehat{\sigma}_{T+1|T}^{*2}=\widehat{\omega}^{*}+\widehat{\alpha}^{*} L_{T}^{2}+\widehat{\beta}^{*} \widehat{\sigma}_{T}^{* 2}$, with $$\widehat{\sigma}_{T}^{* 2}=\frac{\widehat{\omega}^{*}}{1-\widehat{\alpha}^{*}-\widehat{\beta}^{*}}+\widehat{\alpha}^{*} \sum_{j=0}^{T-2} \widehat{\beta}^{* j}\left(L_{T-j-1}^{2}-\frac{\widehat{\omega}^{*}}{1-\widehat{\alpha}^{*}-\widehat{\beta}^{*}}\right)
+      $$
+
+-   Compute $\hat{\varepsilon}_{t}^{*} = L_{t}^{*}/\sigma_{t}^{*}$
+
+## References

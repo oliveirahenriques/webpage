@@ -1,0 +1,102 @@
+project:
+  type: website
+
+website:
+  title: "Victor Henriques"
+  page-navigation: true
+  twitter-card: true
+  search: 
+    location: navbar
+    type: overlay
+  page-footer: 
+    background: dark
+    left: "Copyright 2021, Víctor Henriques" 
+    right: 
+      - icon: github
+        href: https://github.com/oliveirahenriques
+      - icon: linkedin
+        href: https://www.linkedin.com/in/victorhenriquesoliveira/
+
+  navbar:
+    background: primary
+    left:
+      - sidebar:thesis
+      # - sidebar:datascience        
+      # - sidebar:statistics
+      # - sidebar:econometrics
+      # - sidebar:finance
+      # - sidebar:graphaday    
+      # - sidebar:macroeconomics
+      # - text: "CV"
+      #   file: CV.pdf
+
+  sidebar:
+  
+    - id: thesis
+      title: "Thesis"
+      contents:
+        - section: 'Presentation'
+          contents:
+          - GARCH-based Risk Measures.qmd
+        - section: 'Dashboard'
+          # contents:
+          #   - Autocorrelação.qmd          
+
+
+    # - id: datascience
+    #   title: "Data Science"
+      
+      # contents:
+        # navigation items
+
+    # - id: statistics
+    #   title: "Estatística"
+    #   contents:
+    #     - section: 'Estatística descritiva'
+    #       # contents: 
+    #         # - Medidas de tendência central.qmd
+    #     - section: 'Inferência estatística'
+    #       # contents:
+    #       #   - Autocorrelação.qmd          
+    #     - section: 'Testes de hipóteses'
+    #       # contents:
+    #       #   - Autocorrelação.qmd
+        
+    # - id: econometrics
+    #   title: "Econometria"
+    #   contents:
+    #     - section: 'Econometria Básica'
+    #       # contents:
+    #     - section: 'Séries Temporais'
+    #       # contents: 
+    #       #   - Autocorrelação.qmd
+  
+    # - id: finance
+    #   title: "Finanças"
+    #   style: "docked"
+    #   background: light
+    #   collapse-level: 2
+    #   # contents:
+    #   #   - CFA.qmd
+    #     
+    # - id: graphaday
+    #   title: "Gráfico da semana"
+    #   style: "docked"
+    #   background: light
+    #   collapse-level: 2
+    #   # contents:
+        
+    # - id: macroeconomics
+    #   title: "Macroeconomia"
+    #   contents: 
+    #     # navigation items
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    css: styles.css
+    toc: true
+
+editor: visual
