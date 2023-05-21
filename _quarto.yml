@@ -10,7 +10,7 @@ website:
     type: overlay
   page-footer: 
     background: dark
-    left: "Copyright 2021, Víctor Henriques" 
+    left: "Copyright 2023, Víctor Henriques" 
     right: 
       - icon: github
         href: https://github.com/oliveirahenriques
@@ -39,8 +39,8 @@ website:
           contents:
           - GARCH-based Risk Measures.qmd
         - section: 'Dashboard'
-          # contents:
-          #   - Autocorrelação.qmd          
+          contents:
+            - Simulation Results.qmd
 
 
     # - id: datascience
