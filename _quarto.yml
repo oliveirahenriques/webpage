@@ -35,11 +35,11 @@ website:
     - id: thesis
       title: "Thesis"
       contents:
-        - section: 'Presentation'
-          contents:
-          - GARCH-based Risk Measures.qmd
+        # - section: 'Presentation'
+          # contents:
+          # - GARCH-based Risk Measures.qmd
         - section: 'Dashboard'
-        #   contents:
+          contents:
             - Simulation Results.qmd
 
 
