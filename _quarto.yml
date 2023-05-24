@@ -38,9 +38,9 @@ website:
         - section: 'Presentation'
           contents:
           - GARCH-based Risk Measures.qmd
-        # - section: 'Dashboard'
+        - section: 'Dashboard'
         #   contents:
-        #     - Simulation Results.qmd
+            - Simulation Results.qmd
 
 
     # - id: datascience
