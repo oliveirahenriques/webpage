@@ -1,20 +1,15 @@
 ---
-title: "Old Faithful"
+title: "Simulation Results"
+subtitle: 'GARCH-based Asymmetric Least Squares Risk Measures' 
 format: html
-server: shiny
 ---
 
-```{r}
-sliderInput("bins", "Number of bins:", 
-            min = 1, max = 50, value = 30)
-plotOutput("distPlot")
+## Shiny
+
+The Shiny package provides a flexible, easy to use framework for creating interactive web applications with R. Quarto in turn includes support for embedding Shiny components and applets into documents created with the Knitr engine.
+
+
+```{=html}
+ <iframe id="example1" src="https://victorhenriques.shinyapps.io/Dash/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
 
-```{r}
-#| context: server
-output$distPlot <- renderPlot({
-  x <- faithful[, 2]  # Old Faithful Geyser data
-  bins <- seq(min(x), max(x), length.out = input$bins + 1)
-  hist(x, breaks = bins, col = 'darkgray', border = 'white')
-})
-```

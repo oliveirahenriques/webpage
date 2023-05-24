@@ -46,7 +46,7 @@ editor_options:
 ## Simulation Results: Benckmark
 
 ```{r}
-load('risk_data.RData')
+load('risk_data_v2.RData')
 
 library(tidyverse)
 
