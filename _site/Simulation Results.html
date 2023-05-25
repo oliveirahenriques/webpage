@@ -238,9 +238,9 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#benchmark-with-gaussian-distribution" id="toc-benchmark-with-gaussian-distribution" class="nav-link" data-scroll-target="#benchmark-with-gaussian-distribution">Benchmark with Gaussian Distribution</a></li>
   <li><a href="#benchmark-with-t-student-distribution" id="toc-benchmark-with-t-student-distribution" class="nav-link" data-scroll-target="#benchmark-with-t-student-distribution">Benchmark with t-Student Distribution</a></li>
-  </ul></li>
   <li><a href="#high-persistence-with-gaussian-distribution" id="toc-high-persistence-with-gaussian-distribution" class="nav-link" data-scroll-target="#high-persistence-with-gaussian-distribution">High persistence with Gaussian Distribution</a></li>
   <li><a href="#high-persistence-with-t-student-distribution" id="toc-high-persistence-with-t-student-distribution" class="nav-link" data-scroll-target="#high-persistence-with-t-student-distribution">High persistence with t-Student distribution</a></li>
+  </ul></li>
   <li><a href="#computing-the-risk-measures" id="toc-computing-the-risk-measures" class="nav-link" data-scroll-target="#computing-the-risk-measures">Computing the risk measures</a></li>
   <li><a href="#bootstrap-procedure" id="toc-bootstrap-procedure" class="nav-link" data-scroll-target="#bootstrap-procedure">Bootstrap procedure</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
@@ -370,9 +370,8 @@ div.csl-indent {
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">beta1 =</span> <span class="fl">0.8</span>, <span class="co"># our beta_1 (GARCH(1) parameter of sigma_t^2)</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">shape =</span> <span class="dv">8</span>)) <span class="co"># d.o.f. nu for standardized t_nu innovations</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-</section>
-<section id="high-persistence-with-gaussian-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="high-persistence-with-gaussian-distribution">High persistence with Gaussian Distribution</h2>
+<section id="high-persistence-with-gaussian-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="high-persistence-with-gaussian-distribution">High persistence with Gaussian Distribution</h3>
 <ul>
 <li>Consider the following GARCH(1, 1) process for the returns:</li>
 </ul>
@@ -396,8 +395,8 @@ div.csl-indent {
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">beta1 =</span> <span class="fl">0.89</span>, <span class="co"># our beta_1 (GARCH(1) parameter of sigma_t^2)</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">shape =</span> <span class="dv">500</span>)) <span class="co"># d.o.f. nu for standardized t_nu innovations</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="high-persistence-with-t-student-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="high-persistence-with-t-student-distribution">High persistence with t-Student distribution</h2>
+<section id="high-persistence-with-t-student-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="high-persistence-with-t-student-distribution">High persistence with t-Student distribution</h3>
 <ul>
 <li>Consider the following GARCH(1, 1) process for the returns:</li>
 </ul>
@@ -421,8 +420,112 @@ div.csl-indent {
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">beta1 =</span> <span class="fl">0.89</span>, <span class="co"># our beta_1 (GARCH(1) parameter of sigma_t^2)</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">shape =</span> <span class="dv">8</span>)) <span class="co"># d.o.f. nu for standardized t_nu innovations</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
+</section>
 <section id="computing-the-risk-measures" class="level2">
 <h2 class="anchored" data-anchor-id="computing-the-risk-measures">Computing the risk measures</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>risk.measures <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(garch_simulation), <span class="cf">function</span>(i){</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  garch.data <span class="ot">=</span> <span class="fu">get</span>(garch_simulation[i])</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  garch.model <span class="ot">=</span> <span class="fu">get</span>(garch_model[i])</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  garch.risk <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>,<span class="cf">function</span>(j){</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Simulation</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    returns <span class="ot">=</span> garch.data<span class="sc">@</span>path<span class="sc">$</span>seriesSim[,j]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    volatility <span class="ot">=</span> garch.data<span class="sc">@</span>path<span class="sc">$</span>sigmaSim[,j]</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    residuals <span class="ot">=</span> garch.data<span class="sc">@</span>path<span class="sc">$</span>residSim[,j]</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    std.residuals <span class="ot">=</span> (returns<span class="sc">/</span>volatility)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># QMLE</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    qmle.garch <span class="ot">=</span> <span class="fu">garchx</span>(<span class="at">y =</span> returns, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    qmle.std.residuals <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">residuals.garchx</span>(qmle.garch))</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># MLE</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    mle.garch <span class="ot">=</span> <span class="fu">ugarchfit</span>(</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">spec =</span> </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ugarchspec</span>(</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>          <span class="at">mean.model =</span> <span class="fu">list</span>(<span class="at">armaOrder =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">include.mean =</span> <span class="cn">FALSE</span>), <span class="co"># ARMA order #</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>          <span class="at">variance.model =</span> </span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>            <span class="fu">list</span>(<span class="at">model =</span> <span class="st">"sGARCH"</span>,<span class="at">garchOrder =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)), <span class="co"># GARCH order #</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>          <span class="at">distribution.model =</span> <span class="st">"std"</span>), <span class="co"># Innovation distribution #</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> returns,</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">solver =</span> <span class="st">'hybrid'</span>)</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    mle.std.residuals <span class="ot">=</span> <span class="fu">as.numeric</span>(<span class="fu">residuals</span>(mle.garch,<span class="at">standardize =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Bootstrap </span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    garch.bootstrap <span class="ot">=</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bootstrap</span>(<span class="at">fitORspec =</span> mle.garch,</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> returns,</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>                    <span class="at">n.bootfit =</span> <span class="dv">1</span>,</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>                    <span class="at">n.bootpred =</span> <span class="dv">1</span>,</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>                    <span class="at">n.ahead =</span> <span class="dv">1</span>,</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>                    <span class="at">rseed =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>                    <span class="at">solver =</span> <span class="st">"hybrid"</span>,</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>                    <span class="at">solver.control =</span> <span class="fu">list</span>(), <span class="at">fit.control =</span> <span class="fu">list</span>(),</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>                    <span class="at">external.forecasts =</span>  <span class="fu">list</span>(<span class="at">mregfor =</span> <span class="cn">NULL</span>, <span class="at">vregfor =</span> <span class="cn">NULL</span>),</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>                    <span class="at">mexsimdata =</span> <span class="cn">NULL</span>, <span class="at">vexsimdata =</span> <span class="cn">NULL</span>)</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    boot.std.residuals <span class="ot">=</span> garch.bootstrap<span class="sc">$</span>boot.std.residuals</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    garch.results <span class="ot">=</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tibble</span>(</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">id_simulation =</span> j,</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">sim.std.residuals =</span> std.residuals,</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>        <span class="at">qmle.std.residuals =</span> qmle.std.residuals,</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">mle.std.residuals =</span> mle.std.residuals,</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">boot.std.residuals =</span> boot.std.residuals) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_longer</span>(<span class="sc">-</span>id_simulation, <span class="at">names_to =</span> <span class="st">"risk.measure"</span>, <span class="at">values_to =</span> <span class="st">"residuals"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(id_simulation,risk.measure) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarise_at</span>(<span class="fu">vars</span>(residuals),</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.funs =</span> <span class="fu">list</span>(</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>                     <span class="at">quantile_0.010  =</span> <span class="sc">~</span> <span class="fu">quantile</span>(., <span class="at">probs =</span> <span class="fl">0.010</span>),</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>                     <span class="at">quantile_0.025  =</span> <span class="sc">~</span> <span class="fu">quantile</span>(., <span class="at">probs =</span> <span class="fl">0.025</span>),</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>                     <span class="at">quantile_0.050  =</span> <span class="sc">~</span> <span class="fu">quantile</span>(., <span class="at">probs =</span> <span class="fl">0.050</span>),</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>                     <span class="at">quantile_0.100  =</span> <span class="sc">~</span> <span class="fu">quantile</span>(., <span class="at">probs =</span> <span class="fl">0.100</span>),</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>                     <span class="at">quantile_0.250  =</span> <span class="sc">~</span> <span class="fu">quantile</span>(., <span class="at">probs =</span> <span class="fl">0.250</span>),</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>                     <span class="at">quantile_0.500  =</span> <span class="sc">~</span> <span class="fu">quantile</span>(., <span class="at">probs =</span> <span class="fl">0.500</span>),</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expectile_0.010  =</span> <span class="sc">~</span> <span class="fu">expectile</span>(., <span class="at">probs =</span> <span class="fl">0.010</span>),</span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expectile_0.025  =</span> <span class="sc">~</span> <span class="fu">expectile</span>(., <span class="at">probs =</span> <span class="fl">0.025</span>),</span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expectile_0.050  =</span> <span class="sc">~</span> <span class="fu">expectile</span>(., <span class="at">probs =</span> <span class="fl">0.050</span>),</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expectile_0.100  =</span> <span class="sc">~</span> <span class="fu">expectile</span>(., <span class="at">probs =</span> <span class="fl">0.100</span>),</span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expectile_0.250  =</span> <span class="sc">~</span> <span class="fu">expectile</span>(., <span class="at">probs =</span> <span class="fl">0.250</span>),</span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>                     <span class="at">expectile_0.500  =</span> <span class="sc">~</span> <span class="fu">expectile</span>(., <span class="at">probs =</span> <span class="fl">0.500</span>),</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>                     <span class="at">extremile_0.010  =</span> <span class="sc">~</span> <span class="fu">extremile</span>(., <span class="at">probs =</span> <span class="fl">0.010</span>),</span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>                     <span class="at">extremile_0.025  =</span> <span class="sc">~</span> <span class="fu">extremile</span>(., <span class="at">probs =</span> <span class="fl">0.025</span>),</span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>                     <span class="at">extremile_0.050  =</span> <span class="sc">~</span> <span class="fu">extremile</span>(., <span class="at">probs =</span> <span class="fl">0.050</span>),</span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>                     <span class="at">extremile_0.100  =</span> <span class="sc">~</span> <span class="fu">extremile</span>(., <span class="at">probs =</span> <span class="fl">0.100</span>),</span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>                     <span class="at">extremile_0.250  =</span> <span class="sc">~</span> <span class="fu">extremile</span>(., <span class="at">probs =</span> <span class="fl">0.250</span>),</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>                     <span class="at">extremile_0.500  =</span> <span class="sc">~</span> <span class="fu">extremile</span>(., <span class="at">probs =</span> <span class="fl">0.500</span>)</span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>                     )) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ungroup</span>()   </span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">tryCatch</span>(garch.results, <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span>)) </span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>  garch.risk <span class="ot">=</span> </span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>    garch.risk <span class="sc">%&gt;%</span> </span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">data =</span> garch_simulation[i],</span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>           <span class="at">model =</span> garch_model[i])</span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rm</span>(garch.data,garch.model)</span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gc</span>()</span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">tryCatch</span>(garch.risk, <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span>)) </span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="bootstrap-procedure" class="level2">
 <h2 class="anchored" data-anchor-id="bootstrap-procedure">Bootstrap procedure</h2>
@@ -431,94 +534,92 @@ div.csl-indent {
 <li><p>Estimate GARCH by ML and compute the standardized residuals <span class="math inline">\(\hat{\eta}_{t}^{*} = \epsilon_{t}^{*}/\sigma_{t}^{*}\)</span></p></li>
 <li><p>Generate bootstrap samples: <span class="math inline">\(\epsilon_{t}^{*}=\eta_{t}^{*} \widehat{\sigma}_{t}^{*}\)</span>, with <span class="math inline">\(\widehat{\sigma}_{t}^{* 2}=\widehat{\omega}+\widehat{\alpha} L_{t-1}^{* 2}+\widehat{\beta} \widehat{\sigma}_{t-1}^{* 2}\)</span> where <span class="math inline">\(\eta_{t}^{*}\)</span> are random draws with replacement from <span class="math inline">\(\widehat{F}_{\hat{\eta}_{t}^{*}}\)</span> and <span class="math inline">\(\widehat{\sigma}_{1}^{*2}= \widehat{\sigma}_{1}^{2}=\widehat{\omega} /(1-\widehat{\alpha}-\widehat{\beta})\)</span>.</p></li>
 <li><p>Compute MLE for each bootstrap sample: <span class="math inline">\(\widehat{\theta}^{*}=\left(\widehat{\omega}^{*}, \widehat{\alpha}^{*}, \widehat{\beta}^{*}\right)\)</span>.</p></li>
-<li><p>Compute one-step-ahead volatility prediction: <span class="math inline">\(\widehat{\sigma}_{T+1|T}^{*2}=\widehat{\omega}^{*}+\widehat{\alpha}^{*} \epsilon_{t}^{2}+\widehat{\beta}^{*} \widehat{\sigma}_{T}^{* 2}\)</span>, with <span class="math display">\[\widehat{\sigma}_{T}^{* 2}=\frac{\widehat{\omega}^{*}}{1-\widehat{\alpha}^{*}-\widehat{\beta}^{*}}+\widehat{\alpha}^{*} \sum_{j=0}^{T-2} \widehat{\beta}^{* j}\left(L_{T-j-1}^{2}-\frac{\widehat{\omega}^{*}}{1-\widehat{\alpha}^{*}-\widehat{\beta}^{*}}\right)
-  \]</span></p></li>
-<li><p>Compute <span class="math inline">\(\hat{\eta}_{t}^{*} = \epsilon_{t}^{*}/\sigma_{t}^{*}\)</span></p></li>
+<li><p>Compute the standard residuals: <span class="math inline">\(\hat{\eta}_{t}^{*} = \epsilon_{t}^{*}/\sigma_{t}^{*}\)</span></p></li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>bootstrap <span class="ot">=</span> <span class="cf">function</span>(fitORspec, <span class="at">data =</span> <span class="cn">NULL</span>, <span class="at">n.ahead =</span> <span class="dv">10</span>,</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n.bootfit =</span> <span class="dv">100</span>, <span class="at">n.bootpred =</span> <span class="dv">500</span>, <span class="at">rseed =</span> <span class="cn">NA</span>, </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">solver =</span> <span class="st">"solnp"</span>, <span class="at">solver.control =</span> <span class="fu">list</span>(), <span class="at">fit.control =</span> <span class="fu">list</span>(), </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">external.forecasts =</span>  <span class="fu">list</span>(<span class="at">mregfor =</span> <span class="cn">NULL</span>, <span class="at">vregfor =</span> <span class="cn">NULL</span>), </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mexsimdata =</span> <span class="cn">NULL</span>, <span class="at">vexsimdata =</span> <span class="cn">NULL</span>){</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(xts)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> fitORspec</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">=</span> fit<span class="sc">@</span>model</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  vmodel <span class="ot">=</span> fit<span class="sc">@</span>model<span class="sc">$</span>modeldesc<span class="sc">$</span>vmodel</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">=</span> model<span class="sc">$</span>maxOrder</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> model<span class="sc">$</span>modeldata<span class="sc">$</span>data</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">=</span> model<span class="sc">$</span>modeldata<span class="sc">$</span>T</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  ns <span class="ot">=</span> model<span class="sc">$</span>n.start</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.na</span>(rseed[<span class="dv">1</span>])){</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    sseed1 <span class="ot">=</span> <span class="cn">NA</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    sseed2 <span class="ot">=</span> <span class="cn">NA</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(rseed) <span class="sc">&lt;</span> n.bootpred){</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">ugarchboot--&gt;error: seed length must equal n.bootpred + n.bootfit for full method</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>      sseed <span class="ot">=</span> rseed</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>      sseed1 <span class="ot">=</span> sseed[<span class="dv">1</span><span class="sc">:</span>n.bootfit]</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>      sseed2 <span class="ot">=</span> sseed[(n.bootfit<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(n.bootpred <span class="sc">+</span> n.bootfit)]</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># generate paths of equal length to data based on empirical re-sampling of z</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Pascual, Romo and Ruiz (2006) p.2296 equation (5)</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  fz <span class="ot">=</span> fit<span class="sc">@</span>fit<span class="sc">$</span>z</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  empz <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">sample</span>(fz, N, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">ncol =</span> n.bootfit, <span class="at">nrow =</span> N)</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># presigma uses the same starting values as the original fit</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># in paper they use alternatively the unconditional long run sigma </span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Pascual, Romo and Ruiz (2006) p.2296 equation (5) (P.2296 paragraph 2  "...marginal variance..."</span></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  paths <span class="ot">=</span> <span class="fu">ugarchsim</span>(fit, <span class="at">n.sim =</span> N, <span class="at">m.sim =</span> n.bootfit, </span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>                    <span class="at">presigma =</span> <span class="fu">tail</span>(fit<span class="sc">@</span>fit<span class="sc">$</span>sigma, m), </span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>                    <span class="at">prereturns =</span> <span class="fu">tail</span>(model<span class="sc">$</span>modeldata<span class="sc">$</span>data[<span class="dv">1</span><span class="sc">:</span>N], m), </span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>                    <span class="at">preresiduals =</span> <span class="fu">tail</span>(<span class="fu">residuals</span>(fit), m), </span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>                    <span class="at">startMethod =</span> <span class="st">"sample"</span>, </span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>                    <span class="at">custom.dist =</span> <span class="fu">list</span>(<span class="at">name =</span> <span class="st">"sample"</span>, <span class="at">distfit =</span> <span class="fu">as.matrix</span>(empz)),</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>                    <span class="at">rseed =</span> sseed1, <span class="at">mexsimdata =</span> mexsimdata, <span class="at">vexsimdata =</span> vexsimdata)</span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>  fitlist <span class="ot">=</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">"list"</span>, <span class="at">length =</span> n.bootfit)</span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>  simseries <span class="ot">=</span> <span class="fu">fitted</span>(paths)</span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>  spec <span class="ot">=</span> <span class="fu">getspec</span>(fit)</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>  <span class="co"># help the optimization with good starting parameters</span></span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>  spec<span class="sc">@</span>model<span class="sc">$</span>start.pars <span class="ot">=</span> <span class="fu">as.list</span>(<span class="fu">coef</span>(fit))</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>  nx <span class="ot">=</span> <span class="fu">NCOL</span>(simseries)</span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get the distribution of the parameters (by fitting to the new path data)</span></span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>  <span class="co">#-------------------------------------------------------------------------</span></span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>  fitlist <span class="ot">=</span> </span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ugarchfit</span>(</span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>      <span class="at">spec =</span> spec,</span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> <span class="fu">xts</span>(<span class="fu">as.numeric</span>(simseries), <span class="fu">as.Date</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">NROW</span>(data), <span class="at">origin=</span><span class="st">"1970-01-01"</span>)),</span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>      <span class="at">solver =</span> solver,</span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit.control =</span> fit.control, </span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">solver.control =</span> solver.control)</span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>  boot.std.residuals <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">residuals</span>(fitlist, <span class="at">standardize =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>  ans <span class="ot">=</span> <span class="fu">list</span>(<span class="at">boot.std.residuals =</span> boot.std.residuals)</span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(ans)</span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>bootstrap <span class="ot">=</span> <span class="cf">function</span>(fitORspec, <span class="at">data =</span> <span class="cn">NULL</span>, <span class="at">n.ahead =</span> <span class="dv">10</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n.bootfit =</span> <span class="dv">100</span>, <span class="at">n.bootpred =</span> <span class="dv">500</span>, <span class="at">rseed =</span> <span class="cn">NA</span>, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">solver =</span> <span class="st">"solnp"</span>, <span class="at">solver.control =</span> <span class="fu">list</span>(), <span class="at">fit.control =</span> <span class="fu">list</span>(), </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">external.forecasts =</span>  <span class="fu">list</span>(<span class="at">mregfor =</span> <span class="cn">NULL</span>, <span class="at">vregfor =</span> <span class="cn">NULL</span>), </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mexsimdata =</span> <span class="cn">NULL</span>, <span class="at">vexsimdata =</span> <span class="cn">NULL</span>){</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(xts)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">=</span> fitORspec</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">=</span> fit<span class="sc">@</span>model</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  vmodel <span class="ot">=</span> fit<span class="sc">@</span>model<span class="sc">$</span>modeldesc<span class="sc">$</span>vmodel</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">=</span> model<span class="sc">$</span>maxOrder</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> model<span class="sc">$</span>modeldata<span class="sc">$</span>data</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">=</span> model<span class="sc">$</span>modeldata<span class="sc">$</span>T</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  ns <span class="ot">=</span> model<span class="sc">$</span>n.start</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.na</span>(rseed[<span class="dv">1</span>])){</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    sseed1 <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    sseed2 <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(rseed) <span class="sc">&lt;</span> n.bootpred){</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">ugarchboot--&gt;error: seed length must equal n.bootpred + n.bootfit for full method</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>      sseed <span class="ot">=</span> rseed</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>      sseed1 <span class="ot">=</span> sseed[<span class="dv">1</span><span class="sc">:</span>n.bootfit]</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>      sseed2 <span class="ot">=</span> sseed[(n.bootfit<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(n.bootpred <span class="sc">+</span> n.bootfit)]</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># generate paths of equal length to data based on empirical re-sampling of z</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Pascual, Romo and Ruiz (2006) p.2296 equation (5)</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  fz <span class="ot">=</span> fit<span class="sc">@</span>fit<span class="sc">$</span>z</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  empz <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">sample</span>(fz, N, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="at">ncol =</span> n.bootfit, <span class="at">nrow =</span> N)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># presigma uses the same starting values as the original fit</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># in paper they use alternatively the unconditional long run sigma </span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Pascual, Romo and Ruiz (2006) p.2296 equation (5) (P.2296 paragraph 2  "...marginal variance..."</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>  paths <span class="ot">=</span> <span class="fu">ugarchsim</span>(fit, <span class="at">n.sim =</span> N, <span class="at">m.sim =</span> n.bootfit, </span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>                    <span class="at">presigma =</span> <span class="fu">tail</span>(fit<span class="sc">@</span>fit<span class="sc">$</span>sigma, m), </span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>                    <span class="at">prereturns =</span> <span class="fu">tail</span>(model<span class="sc">$</span>modeldata<span class="sc">$</span>data[<span class="dv">1</span><span class="sc">:</span>N], m), </span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>                    <span class="at">preresiduals =</span> <span class="fu">tail</span>(<span class="fu">residuals</span>(fit), m), </span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>                    <span class="at">startMethod =</span> <span class="st">"sample"</span>, </span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>                    <span class="at">custom.dist =</span> <span class="fu">list</span>(<span class="at">name =</span> <span class="st">"sample"</span>, <span class="at">distfit =</span> <span class="fu">as.matrix</span>(empz)),</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>                    <span class="at">rseed =</span> sseed1, <span class="at">mexsimdata =</span> mexsimdata, <span class="at">vexsimdata =</span> vexsimdata)</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>  fitlist <span class="ot">=</span> <span class="fu">vector</span>(<span class="at">mode =</span> <span class="st">"list"</span>, <span class="at">length =</span> n.bootfit)</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>  simseries <span class="ot">=</span> <span class="fu">fitted</span>(paths)</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>  spec <span class="ot">=</span> <span class="fu">getspec</span>(fit)</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>  <span class="co"># help the optimization with good starting parameters</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>  spec<span class="sc">@</span>model<span class="sc">$</span>start.pars <span class="ot">=</span> <span class="fu">as.list</span>(<span class="fu">coef</span>(fit))</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>  nx <span class="ot">=</span> <span class="fu">NCOL</span>(simseries)</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get the distribution of the parameters (by fitting to the new path data)</span></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>  <span class="co">#-------------------------------------------------------------------------</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>  fitlist <span class="ot">=</span> </span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ugarchfit</span>(</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>      <span class="at">spec =</span> spec,</span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> <span class="fu">xts</span>(<span class="fu">as.numeric</span>(simseries), <span class="fu">as.Date</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">NROW</span>(data), <span class="at">origin=</span><span class="st">"1970-01-01"</span>)),</span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>      <span class="at">solver =</span> solver,</span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit.control =</span> fit.control, </span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">solver.control =</span> solver.control)</span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>  boot.std.residuals <span class="ot">=</span> <span class="fu">as.data.frame</span>(<span class="fu">residuals</span>(fitlist, <span class="at">standardize =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>  ans <span class="ot">=</span> <span class="fu">list</span>(<span class="at">boot.std.residuals =</span> boot.std.residuals)</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(ans)</span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="references" class="level2">
 
