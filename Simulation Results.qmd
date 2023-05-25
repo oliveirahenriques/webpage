@@ -2,14 +2,377 @@
 title: "Simulation Results"
 subtitle: 'GARCH-based Asymmetric Least Squares Risk Measures' 
 format: html
+bibliography: references.bib
 ---
 
-## Shiny
+# Simulation
 
-The Shiny package provides a flexible, easy to use framework for creating interactive web applications with R. Quarto in turn includes support for embedding Shiny components and applets into documents created with the Knitr engine.
+- The DGP follows @christoffersen2004estimation and @gao2008estimation
 
+- We simulate daily returns from GARCH-$t(8)$ and GARCH-$t(500)$
+
+  - Unconditional volatility: $\omega = 20^2/252\times (1-\alpha-\beta)$ for each simulation
+
+- We explore two distinct cases: Benchmark and High persistence:
+
+  - Benchmark (BM): $\alpha = 0.10$ and $\beta = 0.80$
+
+  - High persistence (HP): $\alpha = 0.10$ and $\beta = 0.89$
+
+- We simulate $N = 10.000$ paths of size $T = \{500;1000\}$, burning the first $1.000$ realizations
+
+- Details about each DGP cam be consulted in the annex.
+
+## Distribution of risk measures
+
+- We calculate the quantiles, expectiles and extremiles from the standard residuals:
+
+  - First, we compute the risk measures via QMLE at $\tau =\{1\%,5\%,10\%\}$.
+  
+  - Second, we compute the risk measures via MLE at $\tau =\{1\%,5\%,10\%\}$.
+  
+  - Third, we compute the risk measures via bootstrap at $\tau =\{1\%,5\%,10\%\}$.
+
+- In the case of MLE, we estimate the GARCH model with t-Student innovations.
+
+- In the case of bootstrap, we follow @pascual2006bootstrap.
 
 ```{=html}
  <iframe id="example1" src="https://victorhenriques.shinyapps.io/Dash/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
 
+## Relative Distribution
+
+- Following the same strategy, we compute the relative distribution $\xi_{\tau}^{*} = \widehat{\xi}_{\tau}/\xi_{\tau}$
+
+```{=html}
+ <iframe id="example1" src="https://victorhenriques.shinyapps.io/relative_distribution/" style="border: none; width: 100%; height: 720px"></iframe>
+```
+
+## Squared Relative Distribution
+
+- - Following the same strategy, we compute the squared relative distribution $(\xi_{\tau}^{*})^{2} = (\widehat{\xi}_{\tau}/\xi_{\tau})^{2}$ 
+
+```{=html}
+ <iframe id="example1" src="https://victorhenriques.shinyapps.io/squared_relative_distribution/" style="border: none; width: 100%; height: 720px"></iframe>
+```
+
+# Codes for reproduction
+
+## Simulation
+
+### Benchmark with Gaussian Distribution 
+
+-  Consider the following GARCH(1, 1) process for the returns:
+
+$$
+\begin{cases}
+\epsilon_{t} = \sigma_{t} \eta_{t} \ , \quad \eta_{t} \thicksim t_{500}\\
+\sigma_{t}^{2} = \frac{20^2}{252} + 0.10\epsilon_{t-1}^{2} + 0.80\sigma_{t-1}^{2} 
+\end{cases}
+$$
+
+``` r
+garch_benchmark_normal <-
+  ugarchspec(
+    mean.model = list(armaOrder = c(0,0), include.mean = FALSE), # ARMA order
+    variance.model = list(model = "sGARCH", garchOrder = c(1,1)), # GARCH order
+    distribution.model = "std", # Innovation distribution
+    fixed.pars = list(
+      mu = 0, # our mu (intercept)
+      ar1 = 0, # our phi_1 (AR(1) parameter of mu_t)
+      ma1 = 0, # our theta_1 (MA(1) parameter of mu_t)
+      omega = (20^2/252)*(1-0.1-0.8), # our alpha_0 (intercept)
+      alpha1 = 0.1, # our alpha_1 (ARCH(1) parameter of sigma_t^2)
+      beta1 = 0.8, # our beta_1 (GARCH(1) parameter of sigma_t^2)
+      shape = 500)) # d.o.f. nu for standardized t_nu innovations
+```
+### Benchmark with t-Student Distribution
+
+-   Consider the following GARCH(1, 1) process for the returns:
+
+$$
+\begin{cases}
+\epsilon_{t} = \sigma_{t} \eta_{t} \ , \quad \eta_{t} \thicksim t_{8} \\
+\sigma_{t}^{2} = \frac{20^2}{252} + 0.10\epsilon_{t-1}^{2} + 0.80\sigma_{t-1}^{2} 
+\end{cases}
+$$
+
+``` r
+garch_benchmark_t <-
+  ugarchspec(
+    mean.model = list(armaOrder = c(0,0), include.mean = FALSE), # ARMA order
+    variance.model = list(model = "sGARCH", garchOrder = c(1,1)), # GARCH order
+    distribution.model = "std", # Innovation distribution
+    fixed.pars = list(
+      mu = 0, # our mu (intercept)
+      ar1 = 0, # our phi_1 (AR(1) parameter of mu_t)
+      ma1 = 0, # our theta_1 (MA(1) parameter of mu_t)
+      omega = (20^2/252)*(1-0.1-0.8), # our alpha_0 (intercept)
+      alpha1 = 0.1, # our alpha_1 (ARCH(1) parameter of sigma_t^2)
+      beta1 = 0.8, # our beta_1 (GARCH(1) parameter of sigma_t^2)
+      shape = 8)) # d.o.f. nu for standardized t_nu innovations
+```
+
+### High persistence with Gaussian Distribution
+
+-   Consider the following GARCH(1, 1) process for the returns:
+
+$$
+\begin{cases}
+\epsilon_{t} = \sigma_{t} \eta_{t} \ , \quad \eta_{t} \thicksim t_{500} \\
+\sigma_{t}^{2} = \frac{20^2}{252} + 0.10\epsilon_{t-1}^{2} + 0.89\sigma_{t-1}^{2} 
+\end{cases}
+$$
+
+``` r
+garch_high_persistence_normal <-
+  ugarchspec(
+    mean.model = list(armaOrder = c(0,0), include.mean = FALSE), # ARMA order
+    variance.model = list(model = "sGARCH", garchOrder = c(1,1)), # GARCH order
+    distribution.model = "std", # Innovation distribution
+    fixed.pars = list(
+      mu = 0, # our mu (intercept)
+      ar1 = 0, # our phi_1 (AR(1) parameter of mu_t)
+      ma1 = 0, # our theta_1 (MA(1) parameter of mu_t)
+      omega = (20^2/252)*(1-0.1-0.89), # our alpha_0 (intercept)
+      alpha1 = 0.1, # our alpha_1 (ARCH(1) parameter of sigma_t^2)
+      beta1 = 0.89, # our beta_1 (GARCH(1) parameter of sigma_t^2)
+      shape = 500)) # d.o.f. nu for standardized t_nu innovations
+```
+### High persistence with t-Student distribution
+
+- Consider the following GARCH(1, 1) process for the returns:
+
+$$
+\begin{cases}
+\epsilon_{t} = \sigma_{t} \eta_{t} \ , \quad \eta_{t} \thicksim t_{8} \\
+\sigma_{t}^{2} = \frac{20^2}{252} + 0.10\epsilon_{t-1}^{2} + 0.89\sigma_{t-1}^{2} 
+\end{cases}
+$$
+
+``` r
+garch_high_persistence_t <-
+  ugarchspec(
+    mean.model = list(armaOrder = c(0,0), include.mean = FALSE), # ARMA order
+    variance.model = list(model = "sGARCH", garchOrder = c(1,1)), # GARCH order
+    distribution.model = "std", # Innovation distribution
+    fixed.pars = list(
+      mu = 0, # our mu (intercept)
+      ar1 = 0, # our phi_1 (AR(1) parameter of mu_t)
+      ma1 = 0, # our theta_1 (MA(1) parameter of mu_t)
+      omega = (20^2/252)*(1-0.1-0.89), # our alpha_0 (intercept)
+      alpha1 = 0.1, # our alpha_1 (ARCH(1) parameter of sigma_t^2)
+      beta1 = 0.89, # our beta_1 (GARCH(1) parameter of sigma_t^2)
+      shape = 8)) # d.o.f. nu for standardized t_nu innovations
+```
+
+## Computing the risk measures
+
+```r
+risk.measures <- lapply(1:length(garch_simulation), function(i){
+  
+  garch.data = get(garch_simulation[i])
+  
+  garch.model = get(garch_model[i])
+
+  garch.risk <- lapply(1:10000,function(j){
+    
+    # Simulation
+    
+    returns = garch.data@path$seriesSim[,j]
+    
+    volatility = garch.data@path$sigmaSim[,j]
+    
+    residuals = garch.data@path$residSim[,j]
+    
+    std.residuals = (returns/volatility)
+    
+    # QMLE
+    
+    qmle.garch = garchx(y = returns, order = c(1,1))
+    
+    qmle.std.residuals = as.numeric(residuals.garchx(qmle.garch))
+    
+    # MLE
+    
+    mle.garch = ugarchfit(
+      spec = 
+        ugarchspec(
+          mean.model = list(armaOrder = c(0,0), include.mean = FALSE), # ARMA order #
+          variance.model = 
+            list(model = "sGARCH",garchOrder = c(1,1)), # GARCH order #
+          distribution.model = "std"), # Innovation distribution #
+      data = returns,
+      solver = 'hybrid')
+    
+    mle.std.residuals = as.numeric(residuals(mle.garch,standardize = TRUE))
+    
+    # Bootstrap 
+    
+    garch.bootstrap =
+      bootstrap(fitORspec = mle.garch,
+                    data = returns,
+                    n.bootfit = 1,
+                    n.bootpred = 1,
+                    n.ahead = 1,
+                    rseed = c(1,2),
+                    solver = "hybrid",
+                    solver.control = list(), fit.control = list(),
+                    external.forecasts =  list(mregfor = NULL, vregfor = NULL),
+                    mexsimdata = NULL, vexsimdata = NULL)
+
+    boot.std.residuals = garch.bootstrap$boot.std.residuals
+
+    garch.results =
+      tibble(
+        id_simulation = j,
+        sim.std.residuals = std.residuals,
+        qmle.std.residuals = qmle.std.residuals,
+        mle.std.residuals = mle.std.residuals,
+        boot.std.residuals = boot.std.residuals) %>% 
+      pivot_longer(-id_simulation, names_to = "risk.measure", values_to = "residuals") %>% 
+      group_by(id_simulation,risk.measure) %>% 
+      summarise_at(vars(residuals),
+                   .funs = list(
+                     quantile_0.010  = ~ quantile(., probs = 0.010),
+                     quantile_0.025  = ~ quantile(., probs = 0.025),
+                     quantile_0.050  = ~ quantile(., probs = 0.050),
+                     quantile_0.100  = ~ quantile(., probs = 0.100),
+                     quantile_0.250  = ~ quantile(., probs = 0.250),
+                     quantile_0.500  = ~ quantile(., probs = 0.500),
+                     expectile_0.010  = ~ expectile(., probs = 0.010),
+                     expectile_0.025  = ~ expectile(., probs = 0.025),
+                     expectile_0.050  = ~ expectile(., probs = 0.050),
+                     expectile_0.100  = ~ expectile(., probs = 0.100),
+                     expectile_0.250  = ~ expectile(., probs = 0.250),
+                     expectile_0.500  = ~ expectile(., probs = 0.500),
+                     extremile_0.010  = ~ extremile(., probs = 0.010),
+                     extremile_0.025  = ~ extremile(., probs = 0.025),
+                     extremile_0.050  = ~ extremile(., probs = 0.050),
+                     extremile_0.100  = ~ extremile(., probs = 0.100),
+                     extremile_0.250  = ~ extremile(., probs = 0.250),
+                     extremile_0.500  = ~ extremile(., probs = 0.500)
+                     )) %>% 
+      ungroup()   
+
+    return(tryCatch(garch.results, error = function(e) NULL)) 
+
+  })
+  
+  garch.risk = 
+    garch.risk %>% 
+    bind_rows() %>% 
+    mutate(data = garch_simulation[i],
+           model = garch_model[i])
+
+  rm(garch.data,garch.model)
+
+  gc()
+  
+    return(tryCatch(garch.risk, error = function(e) NULL)) 
+  
+  })
+```
+
+## Bootstrap procedure
+
+- We follow the bootstrap method of @pascual2006bootstrap.  
+
+- Estimate GARCH by ML and compute the standardized residuals $\hat{\eta}_{t}^{*} = \epsilon_{t}^{*}/\sigma_{t}^{*}$
+
+-   Generate bootstrap samples: $\epsilon_{t}^{*}=\eta_{t}^{*} \widehat{\sigma}_{t}^{*}$, with $\widehat{\sigma}_{t}^{* 2}=\widehat{\omega}+\widehat{\alpha} L_{t-1}^{* 2}+\widehat{\beta} \widehat{\sigma}_{t-1}^{* 2}$ where $\eta_{t}^{*}$ are random draws with replacement from $\widehat{F}_{\hat{\eta}_{t}^{*}}$ and $\widehat{\sigma}_{1}^{*2}= \widehat{\sigma}_{1}^{2}=\widehat{\omega} /(1-\widehat{\alpha}-\widehat{\beta})$.
+
+-   Compute MLE for each bootstrap sample: $\widehat{\theta}^{*}=\left(\widehat{\omega}^{*}, \widehat{\alpha}^{*}, \widehat{\beta}^{*}\right)$.
+
+- Compute the standard residuals: $\hat{\eta}_{t}^{*} = \epsilon_{t}^{*}/\sigma_{t}^{*}$
+
+```r
+bootstrap = function(fitORspec, data = NULL, n.ahead = 10,
+                     n.bootfit = 100, n.bootpred = 500, rseed = NA, 
+                     solver = "solnp", solver.control = list(), fit.control = list(), 
+                     external.forecasts =  list(mregfor = NULL, vregfor = NULL), 
+                     mexsimdata = NULL, vexsimdata = NULL){
+  
+  require(xts)
+
+  fit = fitORspec
+  
+  model = fit@model
+  
+  vmodel = fit@model$modeldesc$vmodel
+  
+  m = model$maxOrder
+  
+  data = model$modeldata$data
+  
+  N = model$modeldata$T
+  
+  ns = model$n.start
+  
+  if(is.na(rseed[1])){
+    sseed1 = NA
+    sseed2 = NA
+  } else{
+    if(length(rseed) < n.bootpred){
+      stop("\nugarchboot-->error: seed length must equal n.bootpred + n.bootfit for full method\n")
+    } else {
+      sseed = rseed
+      sseed1 = sseed[1:n.bootfit]
+      sseed2 = sseed[(n.bootfit+1):(n.bootpred + n.bootfit)]
+    }
+  }
+  
+  # generate paths of equal length to data based on empirical re-sampling of z
+  # Pascual, Romo and Ruiz (2006) p.2296 equation (5)
+  
+  fz = fit@fit$z
+  
+  empz = matrix(sample(fz, N, replace = TRUE), ncol = n.bootfit, nrow = N)
+
+  # presigma uses the same starting values as the original fit
+  # in paper they use alternatively the unconditional long run sigma 
+  # Pascual, Romo and Ruiz (2006) p.2296 equation (5) (P.2296 paragraph 2  "...marginal variance..."
+  
+  paths = ugarchsim(fit, n.sim = N, m.sim = n.bootfit, 
+                    presigma = tail(fit@fit$sigma, m), 
+                    prereturns = tail(model$modeldata$data[1:N], m), 
+                    preresiduals = tail(residuals(fit), m), 
+                    startMethod = "sample", 
+                    custom.dist = list(name = "sample", distfit = as.matrix(empz)),
+                    rseed = sseed1, mexsimdata = mexsimdata, vexsimdata = vexsimdata)
+  
+  fitlist = vector(mode = "list", length = n.bootfit)
+  
+  simseries = fitted(paths)
+  
+  spec = getspec(fit)
+  
+  # help the optimization with good starting parameters
+  
+  spec@model$start.pars = as.list(coef(fit))
+  
+  nx = NCOL(simseries)
+  
+  # get the distribution of the parameters (by fitting to the new path data)
+  #-------------------------------------------------------------------------
+  
+  fitlist = 
+    ugarchfit(
+      spec = spec,
+      data = xts(as.numeric(simseries), as.Date(1:NROW(data), origin="1970-01-01")),
+      solver = solver,
+      fit.control = fit.control, 
+      solver.control = solver.control)
+    
+  boot.std.residuals = as.data.frame(residuals(fitlist, standardize = TRUE))
+  
+  ans = list(boot.std.residuals = boot.std.residuals)
+  
+  return(ans)
+  
+}
+```
+
+
+## References
