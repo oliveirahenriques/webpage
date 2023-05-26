@@ -5,6 +5,22 @@ format: html
 bibliography: references.bib
 ---
 
+# Summary
+
+- The main simulation results of GARCH-based risk measures as summarized as:
+
+  - In general, we verify that a smaller sample size add more dispersion and quantile level skewness to the simulated distribution, regardless the scenario (Benchmark High Persistence), estimation method (Bootstrap, QMLE and MLE) and type of innovation ($t_{3},t_{8},t_{500}$). 
+
+  - Heavy-tailed ($t_{3}$) simulation reveals that the estimation of risk measures via QMLE is biased.
+  
+    - The result is more pronounced in the High Persistence scenario.
+    
+    - QMLE also divert from both Bootstrap and MLE estimation.
+    
+  - The distribution of Bootstrap, QMLE and MLE risk measures tends to approximate towards the simulated distribution when we choose thin-tailed distribution ($t_{500}$), regardless the simulation scenario.
+  
+  - Heavy-tailed innovations ($t_{3}$) and high persistence ($\beta = 0.89$) maximizes the difference in averages between QMLE and the simulation.   
+
 # Simulation
 
 - The DGP follows @christoffersen2004estimation and @gao2008estimation

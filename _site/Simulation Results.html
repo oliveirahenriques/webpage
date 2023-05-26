@@ -226,7 +226,8 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#simulation" id="toc-simulation" class="nav-link active" data-scroll-target="#simulation">Simulation</a>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation">Simulation</a>
   <ul class="collapse">
   <li><a href="#distribution-of-risk-measures" id="toc-distribution-of-risk-measures" class="nav-link" data-scroll-target="#distribution-of-risk-measures">Distribution of risk measures</a></li>
   <li><a href="#relative-distribution" id="toc-relative-distribution" class="nav-link" data-scroll-target="#relative-distribution">Relative Distribution</a></li>
@@ -269,6 +270,22 @@ div.csl-indent {
 
 </header>
 
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<ul>
+<li><p>The main simulation results of GARCH-based risk measures as summarized as:</p>
+<ul>
+<li><p>In general, we verify that a smaller sample size add more dispersion and quantile level skewness to the simulated distribution, regardless the scenario (Benchmark High Persistence), estimation method (Bootstrap, QMLE and MLE) and type of innovation (<span class="math inline">\(t_{3},t_{8},t_{500}\)</span>).</p></li>
+<li><p>Heavy-tailed (<span class="math inline">\(t_{3}\)</span>) simulation reveals that the estimation of risk measures via QMLE is biased.</p>
+<ul>
+<li><p>The result is more pronounced in the High Persistence scenario.</p></li>
+<li><p>QMLE also divert from both Bootstrap and MLE estimation.</p></li>
+</ul></li>
+<li><p>The distribution of Bootstrap, QMLE and MLE risk measures tends to approximate towards the simulated distribution when we choose thin-tailed distribution (<span class="math inline">\(t_{500}\)</span>), regardless the simulation scenario.</p></li>
+<li><p>Heavy-tailed innovations (<span class="math inline">\(t_{3}\)</span>) and high persistence (<span class="math inline">\(\beta = 0.89\)</span>) maximizes the difference in averages between QMLE and the simulation.</p></li>
+</ul></li>
+</ul>
+</section>
 <section id="simulation" class="level1">
 <h1>Simulation</h1>
 <ul>

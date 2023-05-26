@@ -18,7 +18,28 @@
     "href": "Simulation Results.html",
     "title": "Simulation Results",
     "section": "",
-    "text": "The DGP follows Christoffersen and Gonçalves (2004) and Gao and Song (2008)\nWe simulate daily returns from GARCH-\\(t(3)\\), GARCH-\\(t(8)\\) and GARCH-\\(t(500)\\)\n\nUnconditional volatility: \\(\\omega = 20^2/252\\times (1-\\alpha-\\beta)\\) for each simulation\n\nWe explore two distinct cases: Benchmark and High persistence:\n\nBenchmark (BM): \\(\\alpha = 0.10\\) and \\(\\beta = 0.80\\)\nHigh persistence (HP): \\(\\alpha = 0.10\\) and \\(\\beta = 0.89\\)\n\nWe simulate \\(N = 10.000\\) paths of size \\(T = \\{500;1000\\}\\), burning the first \\(1.000\\) realizations\n\n\n\n\nWe calculate the quantiles, expectiles and extremiles from the standard residuals:\n\nFirst, we compute the risk measures via QMLE at \\(\\tau =\\{1\\%,5\\%,10\\%\\}\\).\nSecond, we compute the risk measures via MLE at \\(\\tau =\\{1\\%,5\\%,10\\%\\}\\).\nThird, we compute the risk measures via bootstrap at \\(\\tau =\\{1\\%,5\\%,10\\%\\}\\).\n\nIn the case of MLE, we estimate the GARCH model with t-Student innovations.\nIn the case of bootstrap, we follow Pascual, Romo, and Ruiz (2006).\n\n \n\n\n\n\nFollowing the same strategy, we compute the relative distribution \\(\\xi_{\\tau}^{*} = \\widehat{\\xi}_{\\tau}/\\xi_{\\tau}\\)\n\n \n\n\n\n\n\nFollowing the same strategy, we compute the squared relative distribution \\((\\xi_{\\tau}^{*})^{2} = (\\widehat{\\xi}_{\\tau}/\\xi_{\\tau})^{2}\\)"
+    "text": "The main simulation results of GARCH-based risk measures as summarized as:\n\nIn general, we verify that a smaller sample size add more dispersion and quantile level skewness to the simulated distribution, regardless the scenario (Benchmark High Persistence), estimation method (Bootstrap, QMLE and MLE) and type of innovation (\\(t_{3},t_{8},t_{500}\\)).\nHeavy-tailed (\\(t_{3}\\)) simulation reveals that the estimation of risk measures via QMLE is biased.\n\nThe result is more pronounced in the High Persistence scenario.\nQMLE also divert from both Bootstrap and MLE estimation.\n\nThe distribution of Bootstrap, QMLE and MLE risk measures tends to approximate towards the simulated distribution when we choose thin-tailed distribution (\\(t_{500}\\)), regardless the simulation scenario.\nHeavy-tailed innovations (\\(t_{3}\\)) and high persistence (\\(\\beta = 0.89\\)) maximizes the difference in averages between QMLE and the simulation."
+  },
+  {
+    "objectID": "Simulation Results.html#distribution-of-risk-measures",
+    "href": "Simulation Results.html#distribution-of-risk-measures",
+    "title": "Simulation Results",
+    "section": "Distribution of risk measures",
+    "text": "Distribution of risk measures\n\nWe calculate the quantiles, expectiles and extremiles from the standard residuals:\n\nFirst, we compute the risk measures via QMLE at \\(\\tau =\\{1\\%,5\\%,10\\%\\}\\).\nSecond, we compute the risk measures via MLE at \\(\\tau =\\{1\\%,5\\%,10\\%\\}\\).\nThird, we compute the risk measures via bootstrap at \\(\\tau =\\{1\\%,5\\%,10\\%\\}\\).\n\nIn the case of MLE, we estimate the GARCH model with t-Student innovations.\nIn the case of bootstrap, we follow Pascual, Romo, and Ruiz (2006)."
+  },
+  {
+    "objectID": "Simulation Results.html#relative-distribution",
+    "href": "Simulation Results.html#relative-distribution",
+    "title": "Simulation Results",
+    "section": "Relative Distribution",
+    "text": "Relative Distribution\n\nFollowing the same strategy, we compute the relative distribution \\(\\xi_{\\tau}^{*} = \\widehat{\\xi}_{\\tau}/\\xi_{\\tau}\\)"
+  },
+  {
+    "objectID": "Simulation Results.html#squared-relative-distribution",
+    "href": "Simulation Results.html#squared-relative-distribution",
+    "title": "Simulation Results",
+    "section": "Squared Relative Distribution",
+    "text": "Squared Relative Distribution\n\n\nFollowing the same strategy, we compute the squared relative distribution \\((\\xi_{\\tau}^{*})^{2} = (\\widehat{\\xi}_{\\tau}/\\xi_{\\tau})^{2}\\)"
   },
   {
     "objectID": "Simulation Results.html#simulation-1",
