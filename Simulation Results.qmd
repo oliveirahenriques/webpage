@@ -9,7 +9,7 @@ bibliography: references.bib
 
 - The DGP follows @christoffersen2004estimation and @gao2008estimation
 
-- We simulate daily returns from GARCH-$t(8)$ and GARCH-$t(500)$
+- We simulate daily returns from GARCH-$t(3)$, GARCH-$t(8)$ and GARCH-$t(500)$
 
   - Unconditional volatility: $\omega = 20^2/252\times (1-\alpha-\beta)$ for each simulation
 
@@ -38,7 +38,7 @@ bibliography: references.bib
 - In the case of bootstrap, we follow @pascual2006bootstrap.
 
 ```{=html}
- <iframe id="example1" src="https://victorhenriques.shinyapps.io/Dash/" style="border: none; width: 100%; height: 720px"></iframe>
+ <iframe id="example1" src="https://victorhenriques.shinyapps.io/standard_distribution/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
 
 ## Relative Distribution
