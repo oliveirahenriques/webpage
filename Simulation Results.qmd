@@ -21,8 +21,6 @@ bibliography: references.bib
 
 - We simulate $N = 10.000$ paths of size $T = \{500;1000\}$, burning the first $1.000$ realizations
 
-- Details about each DGP cam be consulted in the annex.
-
 ## Distribution of risk measures
 
 - We calculate the quantiles, expectiles and extremiles from the standard residuals:
