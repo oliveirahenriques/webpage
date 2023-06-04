@@ -7,6 +7,20 @@
     "text": "About this site\n\n1 + 1\n\n[1] 2"
   },
   {
+    "objectID": "Brownian Motion.html",
+    "href": "Brownian Motion.html",
+    "title": "Stochastic Calculus",
+    "section": "",
+    "text": "Brownian Motion\n\nlibrary(ggplot2)\nlibrary(gganimate)\n\nNo renderer backend detected. gganimate will default to writing frames to separate files\nConsider installing:\n- the `gifski` package for gif output\n- the `av` package for video output\nand restarting the R session\n\n\nTo simulate a Brownian motion sample path \\(W(t)\\) on the interval \\([0, T]\\) we can adopt the following steps:\n\nChoose an integer \\(n\\) and let \\(\\Delta = T/n\\), so that \\(t_{i} = i\\Delta t\\) for \\(i = 0, 1,\\dots,n\\).\nGenerate a sequence \\(\\varepsilon_{i},\\dots,\\varepsilon_{n}\\) of iid standard normal rvs:\n\n\nGenerate a sequence \\(U_{1}, \\dots, U_{n}\\) of Uniform r.v.’s in the interval \\((0,1)\\).\nSet \\(\\varepsilon_{i} = \\Phi^{-1}(x)\\) where \\(\\Phi^{-1}(x)\\) is the inverse cumulative distribution of the standard Gaussian distribution.\nSet \\(dWi = \\varepsilon_{i} \\sqrt{\\Delta t}\\).\n\n\nFinally recursively construct the sample path of the BM letting:\n\n\n\\(W (0) = 0\\);\n\\(W (t_{i}) = W (t_{i-1}) + dWi , \\quad i = 1,\\dots, n\\)\n\n\n# Simulate increments of the BM setting\n\nset.seed(1)\n\nsim = 100 # number of simulations\n\nn = 250 # number of steps\n\nT = 1 # Time-to-maturity\n\n# Simulate Brownian motion process:\n\nBM <- function(T , n, sim){\n  \n  dt = seq(from = 0, to = T, by = T/n) # time-step\n  \n  path = lapply(1:sim, function(j){\n    \n    Ui = runif(n = length(dt), min = 0, max = 1) # sequence of uniform rv's\n    \n    varepsilon = qnorm(p = Ui, mean = 0, sd = 1) # sequence of gaussian rv's\n    \n    dWi = varepsilon*sqrt(dt) #\n    \n    dW = cumsum(dWi)\n    \n    ts.plot(dW)\n    \n    return(dW)\n    \n    })\n  \n  return()\n}"
+  },
+  {
+    "objectID": "Empirical Data.html",
+    "href": "Empirical Data.html",
+    "title": "Empirical Data",
+    "section": "",
+    "text": "We calculate the quantiles, expectiles and extremiles from the standard residuals:\n\nFirst, we compute the risk measures via QMLE at \\(\\tau =\\{1\\%,5\\%,10\\%\\}\\).\nSecond, we compute the risk measures via MLE at \\(\\tau =\\{1\\%,5\\%,10\\%\\}\\).\nThird, we compute the risk measures via bootstrap at \\(\\tau =\\{1\\%,5\\%,10\\%\\}\\).\n\nIn the case of MLE, we estimate the GARCH model with t-Student innovations.\nIn the case of bootstrap, we follow @pascual2006bootstrap."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Victor Henriques",

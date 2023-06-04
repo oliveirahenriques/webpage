@@ -1,0 +1,25 @@
+---
+title: "Empirical Data"
+subtitle: 'GARCH-based Asymmetric Least Squares Risk Measures' 
+format: html
+---
+
+# Summary
+
+## Distribution of risk measures
+
+- We calculate the quantiles, expectiles and extremiles from the standard residuals:
+
+  - First, we compute the risk measures via QMLE at $\tau =\{1\%,5\%,10\%\}$.
+  
+  - Second, we compute the risk measures via MLE at $\tau =\{1\%,5\%,10\%\}$.
+  
+  - Third, we compute the risk measures via bootstrap at $\tau =\{1\%,5\%,10\%\}$.
+
+- In the case of MLE, we estimate the GARCH model with t-Student innovations.
+
+- In the case of bootstrap, we follow @pascual2006bootstrap.
+
+```{=html}
+ <iframe id="example1" src="https://victorhenriques.shinyapps.io/empirical/" style="border: none; width: 100%; height: 720px"></iframe>
+```

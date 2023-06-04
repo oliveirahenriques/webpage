@@ -41,6 +41,7 @@ website:
         - section: 'Dashboard'
           contents:
             - Simulation Results.qmd
+            - Empirical Data.qmd
 
 
     # - id: datascience
