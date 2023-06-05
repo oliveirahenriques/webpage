@@ -23,3 +23,109 @@ format: html
 ```{=html}
  <iframe id="example1" src="https://victorhenriques.shinyapps.io/empirical/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
+
+
+# Codes for replication
+
+```{r}
+bootstrap.qmle <- function(fit, data, n.bootfit, n.ahead, alpha){
+  
+  # Initiaul paarameters
+  
+  n.bootfit = 1000
+  
+  n.bootpred = n.ahead 
+  
+  N = length(data)
+  
+  # ---------------------------------------
+
+  # generate paths of equal length to data based on empirical re-sampling of z
+  # Pascual, Romo and Ruiz (2006) p.2296 equation (5)
+  
+  fz = as.numeric(residuals(fit))
+  
+  empz = matrix(0, ncol = n.bootfit, nrow = N)
+  
+  empz = apply(as.data.frame(1:n.bootfit), 1, FUN=function(i){
+    
+    sample(fz, N, replace = TRUE)
+    
+    })
+  
+  # presigma uses the same starting values as the original fit
+  # in paper they use alternatively the unconditional long run sigma 
+  # Pascual, Romo and Ruiz (2006) p.2296 equation (5) (P.2296 paragraph 2  "...marginal variance..."
+  
+  coef = as.numeric(coef(fit))
+  
+  spec =  
+    ugarchspec(
+      mean.model = list(armaOrder = c(0, 0), include.mean = FALSE),
+      variance.model = list(model = 'sGARCH', garchOrder = c(1,1)),  
+      distribution.model = 'norm',
+      fixed.pars = list(
+        mu = 0, # our mu (intercept)
+        ar1 = 0, # our phi_1 (AR(1) parameter of mu_t)
+        ma1 = 0, # our theta_1 (MA(1) parameter of mu_t)
+        omega = coef[1], # our alpha_0 (intercept)
+        alpha1 = coef[2], # our alpha_1 (ARCH(1) parameter of sigma_t^2)
+        beta1 = coef[3])) # our beta_1 (GARCH(1) parameter of sigma_t^2)
+  
+  presigma = tail(sqrt(fitted(fit)),1)
+  
+  prereturns = tail(data, 1)
+  
+  preresiduals = tail(fz, 1) 
+  
+  paths = ugarchpath(spec, 
+                     n.sim = N, 
+                     m.sim = n.bootfit, 
+                     presigma = presigma,
+                     prereturns = prereturns,
+                     preresiduals = preresiduals,
+                     n.start = 0, 
+                     custom.dist = list(name = "sample", distfit = as.matrix(empz)))
+  
+  fitlist = vector(mode="list", length = n.bootfit)
+  
+  simseries = fitted(paths)
+  
+  nx = NCOL(simseries)
+  
+  # generate path based forecast values
+  # for each path we generate n.bootpred vectors of resampled data of length n.ahead
+  # Equation (6) in the PRR paper (again using z from original fit)
+  #-------------------------------------------------------------------------
+  
+  fitlist = lapply(as.list(1:nx), FUN = function(i){
+    
+    fit = garchx(y = as.numeric(simseries[,i]), order = c(1,1))
+    
+    coef = coef(fit)
+    
+    recursive = sapply(0:(length(data)-2), function(t){
+      
+      theta[3]^t*((data[N-t-1])^2 - theta[1]/(1-theta[2] - theta[3]))
+      
+      })
+    
+    sigmaT = theta[1]/(1-theta[2] - theta[3]) + theta[2]*sum(unlist(recursive))
+    
+    sigma2 = theta[1] + theta[2]*(tail(as.numeric(simseries[,i]),1))^2 + theta[3]*sigmaT
+    
+    xi = extremile(as.numeric(residuals(fit)), probs = 0.05)
+    
+    df = data.frame('ID' = i, 'xi(sigma)' = xi*sqrt(sigma2) ,'xi' = xi, 'sigma2' = sigma2,
+                    'omega' = theta[1],'alpha' = theta[2], 'beta' = theta[3])
+    
+    return(df)
+
+  })
+  
+  teste = fitlist %>% bind_rows()
+  
+  
+}
+```
+
