@@ -26,7 +26,7 @@ format: html
  <iframe id="example1" src="https://victorhenriques.shinyapps.io/empirical/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
 
-## Bootstrap Confidence Interval
+# Bootstrap Confidence Interval
 
 - We calculate the bootstrap confidence interval of all Filtered Historical Simulation risk measures. 
 
