@@ -1,33 +1,12 @@
----
-title: "Empirical Data"
-subtitle: 'GARCH-based Asymmetric Least Squares Risk Measures' 
-format: html
----
-
-# Distribution of risk measures
-
-- We calculate the quantiles, expectiles and extremiles from the standard residuals:
-
-  - First, we compute the risk measures via QMLE at $\tau =\{1\%,5\%,10\%\}$.
-
-  - Second, we compute the risk measures via (QMLE) bootstrap at $\tau =\{1\%,5\%,10\%\}$.
-
-```{=html}
- <iframe id="example1" src="https://victorhenriques.shinyapps.io/QMLE_distribution/" style="border: none; width: 100%; height: 720px"></iframe>
-```
-
-# Empirical Data
-
-```{=html}
- <iframe id="example1" src="https://victorhenriques.shinyapps.io/empirical/" style="border: none; width: 100%; height: 720px"></iframe>
-```
-
-# Codes for replication
-
-```{r}
 QMLE.bootstrap <- function(fit, data, n.bootfit = 999, n.ahead = 1, tau = 0.05, alpha = 0.05){
   
   # initial paarameters
+  
+  # fit = garchx(data, order = c(1,1))
+  
+  # n.bootfit = 1000
+  # 
+  # tau = 0.05
   
   n.bootpred = n.ahead 
   
@@ -158,5 +137,3 @@ QMLE.bootstrap <- function(fit, data, n.bootfit = 999, n.ahead = 1, tau = 0.05, 
   return(confidence.interval)
   
 }
-```
-
