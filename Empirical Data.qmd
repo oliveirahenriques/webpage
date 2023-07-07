@@ -2,6 +2,11 @@
 title: "Empirical Data"
 subtitle: 'GARCH-based Asymmetric Least Squares Risk Measures' 
 format: html
+execute: 
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Distribution of risk measures
@@ -18,7 +23,7 @@ format: html
 
 # Empirical Data
 
- - We collect the `S\&P 500` and `EUR/USD` daily price data from January 2010 to July 2023.
+ - We collect the `S\&P 500`, `EUR/USD` and `BTC/USD` daily price data from January 2014 to July 2023.
  
   - We calculate all risk measures considering Historical, Parametric and Filtered Historical Simulation.
 
@@ -32,6 +37,96 @@ format: html
 
 ```{=html}
  <iframe id="example1" src="https://victorhenriques.shinyapps.io/empirical_ci/" style="border: none; width: 100%; height: 720px"></iframe>
+```
+
+# Dowside Risk Measures
+
+
+
+```{r}
+library(tidyverse)
+library(quantmod)
+library(yfR)
+library(kableExtra)
+library(PerformanceAnalytics)
+library(tsibble)
+
+equity_ticker <- c('^GSPC','EURUSD=X','BTC-USD')
+
+start_date <- ymd("2014-01-01")
+
+end_date <- ymd("2023-06-01")
+
+data <- 
+  yf_get(equity_ticker,start_date,end_date) %>%
+  select(ref_date,ticker,price_adjusted,ret_adjusted_prices) %>%
+  rename_with(~ c('date','ticker','price','returns')) %>%
+  drop_na() %>%
+  group_by(ticker) %>%
+  ungroup()
+```
+
+Bitcoin reached its all-time peak of $\$67566.83$ on November 08, 2021 and was trading at $\$15787.28$ on November 21, 2022. 
+
+```{r}
+data %>% 
+  ggplot() +
+  geom_line(aes(x = date, y = price)) +
+  facet_grid( ticker ~ ., scales = 'free') +
+  theme_bw()
+```
+
+To provide some perspective, figure below compares the historical drawdown of `S\&P 500`, `EUR/USD` and `BTC/USD`. Bitcoin has presented extreme drawdowns ($83.3\%$) in contrast to  `S\&P 500` ($33.9\%$) and `EUR/USD` ($31.1\%$).
+
+```{r}
+data %>% 
+  pivot_wider(id_cols = date, names_from = ticker, values_from = returns)  %>%
+  as.xts() %>% 
+  Drawdowns() %>%
+  as.data.frame() %>% 
+  rownames_to_column(var = 'date') %>% 
+  mutate(date = as_date(date)) %>% 
+  pivot_longer(-date, names_to = 'ticker', values_to = 'drawdown') %>% 
+  ggplot() +
+  geom_line(aes(x = date, y = drawdown, color = ticker)) +
+  theme_bw() +
+  labs(x = 'Date', y = 'Drawdown') + 
+  theme(legend.position = 'bottom',
+        legend.title = element_blank())
+```
+
+Table below show the maximum drawdown of each ticker.
+
+```{r}
+getSymbols("DGS3MO", src = "FRED")
+
+prices = 
+  data %>%
+  pivot_wider(id_cols = date, names_from = ticker, values_from = price) %>% 
+  drop_na() %>% 
+  as.xts()
+
+returns = CalculateReturns(prices, 'log')
+
+T.bill = 
+  DGS3MO %>% 
+  as.data.frame() %>% 
+  rownames_to_column(var = 'date') %>% 
+  mutate(date = as_date(date)) %>% 
+  drop_na() %>% 
+  rename_with(~c('date','rate')) %>%
+  mutate(rate = rate/100/12) %>% 
+  as.xts()
+
+T.bill = T.bill[zoo::index(returns)]
+
+
+table.AnnualizedReturns(returns, Rf = T.bill) %>%
+  bind_rows(table.DownsideRiskRatio(returns, MAR = mean(T.bill))) %>%
+  bind_rows(table.DownsideRisk(returns, Rf = mean(T.bill))) %>%
+  as.data.frame() %>%
+  kable() %>%
+  kable_styling()
 ```
 
 # Codes for replication
