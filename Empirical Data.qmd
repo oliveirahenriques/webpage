@@ -11,6 +11,19 @@ editor_options:
 
 # Distribution of risk measures
 
+```{r}
+#| eval: true
+#| include: false
+
+library(tidyverse)
+library(quantmod)
+library(yfR)
+library(kableExtra)
+library(PerformanceAnalytics)
+library(tsibble)
+```
+
+
 - We calculate the quantiles, expectiles and extremiles from the standard residuals:
 
   - First, we compute the risk measures via QMLE at $\tau =\{1\%,5\%,10\%\}$.
@@ -23,37 +36,123 @@ editor_options:
 
 # Empirical Data
 
- - We collect the `S\&P 500`, `EUR/USD` and `BTC/USD` daily price data from January 2014 to July 2023.
+We collect the daily price data of `S\&P 500`, `EUR/USD`, `BTC/USD`, `ETH-USD`,  `BNB-USD`, `DOGE-USD` and `ADA-USD`
  
-  - We calculate all risk measures considering Historical, Parametric and Filtered Historical Simulation.
+The following dashboard summarizes all risk measures considering Historical, Parametric and Filtered Historical Simulation.
 
 ```{=html}
  <iframe id="example1" src="https://victorhenriques.shinyapps.io/empirical/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
 
+Figure below show the Filtered Historical Simulation risk measures for several assets for $\tau = 0.05$.
+
+```{r}
+risk.data = 
+  readRDS('C:/Users/Olive/Documents/Github/Thesis/GARCH-Based Asymetric Least Squares for Financial Time Series/Dashboards/GARCH-Based  ALS Empirical Analysis/empirical/risk.data.RDS')
+
+
+risk.data %>%
+  filter(window %in% c('expanding')) %>% 
+  filter(type %in% c('Filtered Historical Simulation','Returns')) %>%
+  filter(measure %in% c('VaR','Returns','Expectile','Extremile')) %>%
+  filter(level %in% 0.05) %>% 
+  filter(!(ticker %in% c('EURUSD=X'))) %>% 
+  ggplot() +
+  geom_line(aes(x = date, y = estimate, color = measure, linetype = type), linewidth = 1) +
+  scale_color_manual(values = 
+                       c('Returns' = 'black' ,
+                         'Extremile' = 'red',
+                         'Expectile' = 'blue',
+                         'VaR' = 'forestgreen',
+                         'Expected Shortfall' = 'purple')) +
+  scale_linetype_manual(
+    values = c('Returns' = 'solid',
+               'Filtered Historical Simulation' = 'longdash')) +
+  theme_bw() +
+  labs(x = 'Time', y = 'Returns, Risk Measures') +
+  facet_wrap(~ticker, scales = 'free') + 
+  theme(legend.title = element_blank(),
+            legend.position = 'bottom',
+            legend.text = element_text(size = 18),
+            axis.title = element_text(size = 16),
+            strip.text = element_text(size = 16))
+```
+
 # Bootstrap Confidence Interval
 
-- We calculate the bootstrap confidence interval of all Filtered Historical Simulation risk measures. 
+The following dashboard reports the bootstrap confidence interval of all Filtered Historical Simulation risk measures. 
 
 ```{=html}
  <iframe id="example1" src="https://victorhenriques.shinyapps.io/empirical_ci/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
 
-# Dowside Risk Measures
-
-
+Figure below shows the bootstrap confidence interval of the $\tau$-th Extremile ($\tau =0.05$) risk measure considering a bootstrap confidence level of $\alpha = 0.05$.  
 
 ```{r}
-library(tidyverse)
-library(quantmod)
-library(yfR)
-library(kableExtra)
-library(PerformanceAnalytics)
-library(tsibble)
+ci.data = 
+  readRDS('C:/Users/Olive/Documents/Github/Thesis/GARCH-Based Asymetric Least Squares for Financial Time Series/Dashboards/GARCH-Based  ALS Empirical Analysis/empirical_ci/ci.data.RDS')
 
-equity_ticker <- c('^GSPC','EURUSD=X','BTC-USD')
 
-start_date <- ymd("2014-01-01")
+ci.data %>%
+  filter(window %in% c('expand')) %>% 
+  filter(measure %in% c('Returns','Extremile')) %>%
+  filter(level %in% 0.05) %>% 
+  filter(!(ticker %in% c('EURUSD=X'))) %>% 
+  fill(c(lower_bound,upper_bound)) %>% 
+  ggplot() +
+  geom_line(aes(x = date, y = estimate, color = measure), linetype = 'solid', linewidth = 1) +
+  geom_line(aes(x = date, y = upper_bound), linetype = 'dotted', color = 'darkred',linewidth = 1) +
+  geom_line(aes(x = date, y = lower_bound), linetype = 'dotted', color = 'darkred', linewidth = 1) +
+  scale_color_manual(
+    values = c('Returns' = 'black' ,
+               'Extremile' = 'darkgrey',
+               'Expectile' = 'blue',
+               'VaR' = 'forestgreen')) + 
+  labs(x = 'Time', y = 'Returns, Risk Measures') +
+  theme_bw() +
+  facet_wrap(~ticker, scales = 'free') +
+  theme(legend.title = element_blank(),
+            legend.position = 'bottom',
+            legend.text = element_text(size = 18),
+            axis.title = element_text(size = 16),
+            strip.text = element_text(size = 16))
+```
+
+Likewise, Figure below shows the bootstrap confidence interval of the $\tau$-th Expectile ($\tau =0.05$) risk measure considering a bootstrap confidence level of $\alpha = 0.05$.
+
+```{r}
+ci.data %>%
+  filter(window %in% c('expand')) %>% 
+  filter(measure %in% c('Returns','Expectile')) %>%
+  filter(level %in% 0.05) %>% 
+  filter(!(ticker %in% c('EURUSD=X'))) %>% 
+  fill(c(lower_bound,upper_bound)) %>% 
+  ggplot() +
+  geom_line(aes(x = date, y = estimate, color = measure), linetype = 'solid', linewidth = 1) +
+  geom_line(aes(x = date, y = upper_bound), linetype = 'dotted', color = 'darkred',linewidth = 1) +
+  geom_line(aes(x = date, y = lower_bound), linetype = 'dotted', color = 'darkred', linewidth = 1) +
+  scale_color_manual(
+    values = c('Returns' = 'black' ,
+               'Extremile' = 'darkgrey',
+               'Expectile' = 'blue',
+               'VaR' = 'forestgreen')) + 
+  labs(x = 'Time', y = 'Returns, Risk Measures') +
+  theme_bw() +
+  facet_wrap(~ticker, scales = 'free') +
+  theme(legend.title = element_blank(),
+            legend.position = 'bottom',
+            legend.text = element_text(size = 18),
+            axis.title = element_text(size = 16),
+            strip.text = element_text(size = 16))
+```
+
+# Drawdown
+
+```{r}
+equity_ticker <- c('^GSPC','EURUSD=X','BTC-USD',
+                   'ETH-USD','BNB-USD','DOGE-USD','ADA-USD')
+
+start_date <- ymd("2017-01-01")
 
 end_date <- ymd("2023-06-01")
 
@@ -66,17 +165,19 @@ data <-
   ungroup()
 ```
 
-Bitcoin reached its all-time peak of $\$67566.83$ on November 08, 2021 and was trading at $\$15787.28$ on November 21, 2022. 
+Cryptocurrencies reached their peak values during the market's surge in late 2021. However, many digital assets experienced significant price corrections in the following year. In particular, Bitcoin reached its record-breaking all-time high of $\$67,566.83$ on November 8, 2021, although experienced a substantial decline in value, trading at $\$15,787.28$ on November 21, 2022. 
 
 ```{r}
 data %>% 
   ggplot() +
   geom_line(aes(x = date, y = price)) +
-  facet_grid( ticker ~ ., scales = 'free') +
+  labs(x = 'Date', y = 'Price') + 
+  facet_grid(ticker ~ ., scales = 'free') +
   theme_bw()
 ```
 
-To provide some perspective, figure below compares the historical drawdown of `S\&P 500`, `EUR/USD` and `BTC/USD`. Bitcoin has presented extreme drawdowns ($83.3\%$) in contrast to  `S\&P 500` ($33.9\%$) and `EUR/USD` ($31.1\%$).
+
+The figure below presents a comparative analysis of historical drawdowns among various cryptocurrencies, namely Bitcoin (BTC-USD), Bitcoin Cash (BTC/USD), Ethereum (ETH-USD), Binance Coin (BNB-USD), Dogecoin (DOGE-USD), and Cardano (ADA-USD), with respect to the S&P 500 and EUR/USD. It is evident that Cardano, Ethereum, Dogecoin, Bitcoin, and Binance Coin have experienced significant declines, surpassing 80% since reaching their respective peak values. In contrast, the drawdowns observed in the S&P 500 and EUR/USD have been relatively milder, hovering around 30%. These results show the substantial price fluctuations and volatility observed within the cryptocurrency market while highlighting the comparatively more stable performance of traditional financial benchmarks like the S&P 500 and EUR/USD.
 
 ```{r}
 data %>% 
@@ -92,42 +193,10 @@ data %>%
   theme_bw() +
   labs(x = 'Date', y = 'Drawdown') + 
   theme(legend.position = 'bottom',
-        legend.title = element_blank())
+        legend.title = element_blank()) +
+   guides(col = guide_legend(nrow = 1))
 ```
 
-Table below show the maximum drawdown of each ticker.
-
-```{r}
-getSymbols("DGS3MO", src = "FRED")
-
-prices = 
-  data %>%
-  pivot_wider(id_cols = date, names_from = ticker, values_from = price) %>% 
-  drop_na() %>% 
-  as.xts()
-
-returns = CalculateReturns(prices, 'log')
-
-T.bill = 
-  DGS3MO %>% 
-  as.data.frame() %>% 
-  rownames_to_column(var = 'date') %>% 
-  mutate(date = as_date(date)) %>% 
-  drop_na() %>% 
-  rename_with(~c('date','rate')) %>%
-  mutate(rate = rate/100/12) %>% 
-  as.xts()
-
-T.bill = T.bill[zoo::index(returns)]
-
-
-table.AnnualizedReturns(returns, Rf = T.bill) %>%
-  bind_rows(table.DownsideRiskRatio(returns, MAR = mean(T.bill))) %>%
-  bind_rows(table.DownsideRisk(returns, Rf = mean(T.bill))) %>%
-  as.data.frame() %>%
-  kable() %>%
-  kable_styling()
-```
 
 # Codes for replication
 
