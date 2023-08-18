@@ -42,8 +42,7 @@ website:
           contents:
             - Simulation Results.qmd
             - Empirical Data.qmd
-            - Conditional Expected Shortfall.qmd
-
+            - Conditional ES.qmd
 
     # - id: datascience
     #   title: "Data Science"
