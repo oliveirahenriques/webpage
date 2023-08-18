@@ -44,7 +44,7 @@ website:
             - Empirical Data.qmd
         - section: 'Projects'
           contents:
-            - Conditional ES.qmd
+            - Conditional Expected Shortfall.qmd
 
     # - id: datascience
     #   title: "Data Science"
