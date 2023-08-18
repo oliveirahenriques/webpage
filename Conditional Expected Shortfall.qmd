@@ -29,7 +29,11 @@ $$
 \hat{\text{ES}}_{t}(\tau) \pm \frac{\Phi_{1-\gamma / 2}^{-1}}{\sqrt{n}}\left\{\frac{\partial \tilde{\sigma}_t\left(\hat{\theta}_{n, \tau}\right)}{\partial \theta^{\prime}} \widehat{\Xi}_\tau \frac{\partial \tilde{\sigma}_t\left(\hat{\theta}_{n, \tau}\right)}{\partial \theta}\right\}^{1/2}
 $$
 
-3. **Explore new ideas such as VHS**
+3. **Explore the conditional ES in the Virtual Historical Simulation (VHS)**
+
+- @francq2020virtual estimate the conditional VaR using a standard GARCH model via Gaussian QML
+
+- They derive an asymptotic theory for the conditional VaR in the VHS case.
 
 # Conditional Expected Shortfall
 
