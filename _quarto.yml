@@ -42,7 +42,9 @@ website:
           contents:
             - Simulation Results.qmd
             - Empirical Data.qmd
-
+        - section: 'Projects'
+          contents:
+            - Conditional ES.qmd
 
     # - id: datascience
     #   title: "Data Science"
