@@ -7,77 +7,76 @@ bibliography: references.bib
 
 # Summary
 
-- The main simulation results of GARCH-based risk measures as summarized as:
+-   The main simulation results of GARCH-based risk measures as summarized as:
 
-  - In general, we verify that a smaller sample size add more dispersion and quantile level skewness to the simulated distribution, regardless the scenario (Benchmark High Persistence), estimation method (Bootstrap, QMLE and MLE) and type of innovation ($t_{3},t_{8},t_{500}$). 
+    -   In general, we verify that a smaller sample size add more dispersion and quantile level skewness to the simulated distribution, regardless the scenario (Benchmark High Persistence), estimation method (Bootstrap, QMLE and MLE) and type of innovation ($t_{3},t_{8},t_{500}$).
 
-  - Heavy-tailed ($t_{3}$) simulation reveals that the estimation of risk measures via QMLE is biased.
-  
-    - The result is more pronounced in the High Persistence scenario.
-    
-    - QMLE also divert from both Bootstrap and MLE estimation.
-    
-  - The distribution of Bootstrap, QMLE and MLE risk measures tends to approximate towards the simulated distribution when we choose thin-tailed distribution ($t_{500}$), regardless the simulation scenario.
-  
-  - Heavy-tailed innovations ($t_{3}$) and high persistence ($\beta = 0.89$) maximizes the difference in averages between QMLE and the simulation.   
+    -   Heavy-tailed ($t_{3}$) simulation reveals that the estimation of risk measures via QMLE is biased.
+
+        -   The result is more pronounced in the High Persistence scenario.
+
+        -   QMLE also divert from both Bootstrap and MLE estimation.
+
+    -   The distribution of Bootstrap, QMLE and MLE risk measures tends to approximate towards the simulated distribution when we choose thin-tailed distribution ($t_{500}$), regardless the simulation scenario.
+
+    -   Heavy-tailed innovations ($t_{3}$) and high persistence ($\beta = 0.89$) maximizes the difference in averages between QMLE and the simulation.
 
 # Simulation
 
-- The DGP follows @christoffersen2004estimation and @gao2008estimation
+-   The DGP follows @christoffersen2004estimation and @gao2008estimation
 
-- We simulate daily returns from GARCH-$t(3)$, GARCH-$t(8)$ and GARCH-$t(500)$
+-   We simulate daily returns from GARCH-$t(3)$, GARCH-$t(8)$ and GARCH-$t(500)$
 
-  - Unconditional volatility: $\omega = 20^2/252\times (1-\alpha-\beta)$ for each simulation
+    -   Unconditional volatility: $\omega = 20^2/252\times (1-\alpha-\beta)$ for each simulation
 
-- We explore two distinct cases: Benchmark and High persistence:
+-   We explore two distinct cases: Benchmark and High persistence:
 
-  - Benchmark (BM): $\alpha = 0.10$ and $\beta = 0.80$
+    -   Benchmark (BM): $\alpha = 0.10$ and $\beta = 0.80$
 
-  - High persistence (HP): $\alpha = 0.10$ and $\beta = 0.89$
+    -   High persistence (HP): $\alpha = 0.10$ and $\beta = 0.89$
 
-- We simulate $N = 10.000$ paths of size $T = \{500;1000\}$, burning the first $1.000$ realizations
+-   We simulate $N = 10.000$ paths of size $T = \{500;1000\}$, burning the first $1.000$ realizations
 
 ## Distribution of risk measures
 
-- We calculate the quantiles, expectiles and extremiles from the standard residuals:
+-   We calculate the quantiles, expectiles and extremiles from the standard residuals:
 
-  - First, we compute the risk measures via QMLE at $\tau =\{1\%,5\%,10\%\}$.
-  
-  - Second, we compute the risk measures via MLE at $\tau =\{1\%,5\%,10\%\}$.
-  
-  - Third, we compute the risk measures via bootstrap at $\tau =\{1\%,5\%,10\%\}$.
+    -   First, we compute the risk measures via QMLE at $\tau =\{1\%,5\%,10\%\}$.
 
-- In the case of MLE, we estimate the GARCH model with t-Student innovations.
+    -   Second, we compute the risk measures via MLE at $\tau =\{1\%,5\%,10\%\}$.
 
-- In the case of bootstrap, we follow @pascual2006bootstrap.
+    -   Third, we compute the risk measures via bootstrap at $\tau =\{1\%,5\%,10\%\}$.
+
+-   In the case of MLE, we estimate the GARCH model with t-Student innovations.
+
+-   In the case of bootstrap, we follow @pascual2006bootstrap.
 
 ```{=html}
  <iframe id="example1" src="https://victorhenriques.shinyapps.io/standard_distribution/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
-
 ## Relative Distribution
 
-- Following the same strategy, we compute the relative distribution $\xi_{\tau}^{*} = \widehat{\xi}_{\tau}/\xi_{\tau}$
+-   Following the same strategy, we compute the relative distribution $\xi_{\tau}^{*} = \widehat{\xi}_{\tau}/\xi_{\tau}$
 
 ```{=html}
  <iframe id="example1" src="https://victorhenriques.shinyapps.io/relative_distribution/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
-
 ## Squared Relative Distribution
 
-- - Following the same strategy, we compute the squared relative distribution $(\xi_{\tau}^{*})^{2} = (\widehat{\xi}_{\tau}/\xi_{\tau})^{2}$ 
+-   
+
+    -   Following the same strategy, we compute the squared relative distribution $(\xi_{\tau}^{*})^{2} = (\widehat{\xi}_{\tau}/\xi_{\tau})^{2}$
 
 ```{=html}
  <iframe id="example1" src="https://victorhenriques.shinyapps.io/squared_relative_distribution/" style="border: none; width: 100%; height: 720px"></iframe>
 ```
-
 # Codes for reproduction
 
 ## Simulation
 
-### Benchmark with Gaussian Distribution 
+### Benchmark with Gaussian Distribution
 
--  Consider the following GARCH(1, 1) process for the returns:
+-   Consider the following GARCH(1, 1) process for the returns:
 
 $$
 \begin{cases}
@@ -101,6 +100,7 @@ garch_benchmark_normal <-
       beta1 = 0.8, # our beta_1 (GARCH(1) parameter of sigma_t^2)
       shape = 500)) # d.o.f. nu for standardized t_nu innovations
 ```
+
 ### Benchmark with t-Student Distribution
 
 -   Consider the following GARCH(1, 1) process for the returns:
@@ -154,9 +154,10 @@ garch_high_persistence_normal <-
       beta1 = 0.89, # our beta_1 (GARCH(1) parameter of sigma_t^2)
       shape = 500)) # d.o.f. nu for standardized t_nu innovations
 ```
+
 ### High persistence with t-Student distribution
 
-- Consider the following GARCH(1, 1) process for the returns:
+-   Consider the following GARCH(1, 1) process for the returns:
 
 $$
 \begin{cases}
@@ -183,7 +184,7 @@ garch_high_persistence_t <-
 
 ## Computing the risk measures
 
-```r
+``` r
 risk.measures <- lapply(1:length(garch_simulation), function(i){
   
   garch.data = get(garch_simulation[i])
@@ -291,17 +292,17 @@ risk.measures <- lapply(1:length(garch_simulation), function(i){
 
 ## Bootstrap procedure
 
-- We follow the bootstrap method of @pascual2006bootstrap.  
+-   We follow the bootstrap method of @pascual2006bootstrap.
 
-- Estimate GARCH by ML and compute the standardized residuals $\hat{\eta}_{t}^{*} = \epsilon_{t}^{*}/\sigma_{t}^{*}$
+-   Estimate GARCH by ML and compute the standardized residuals $\hat{\eta}_{t}^{*} = \epsilon_{t}^{*}/\sigma_{t}^{*}$
 
 -   Generate bootstrap samples: $\epsilon_{t}^{*}=\eta_{t}^{*} \widehat{\sigma}_{t}^{*}$, with $\widehat{\sigma}_{t}^{* 2}=\widehat{\omega}+\widehat{\alpha} L_{t-1}^{* 2}+\widehat{\beta} \widehat{\sigma}_{t-1}^{* 2}$ where $\eta_{t}^{*}$ are random draws with replacement from $\widehat{F}_{\hat{\eta}_{t}^{*}}$ and $\widehat{\sigma}_{1}^{*2}= \widehat{\sigma}_{1}^{2}=\widehat{\omega} /(1-\widehat{\alpha}-\widehat{\beta})$.
 
 -   Compute MLE for each bootstrap sample: $\widehat{\theta}^{*}=\left(\widehat{\omega}^{*}, \widehat{\alpha}^{*}, \widehat{\beta}^{*}\right)$.
 
-- Compute the standard residuals: $\hat{\eta}_{t}^{*} = \epsilon_{t}^{*}/\sigma_{t}^{*}$
+-   Compute the standard residuals: $\hat{\eta}_{t}^{*} = \epsilon_{t}^{*}/\sigma_{t}^{*}$
 
-```r
+``` r
 bootstrap = function(fitORspec, data = NULL, n.ahead = 10,
                      n.bootfit = 100, n.bootpred = 500, rseed = NA, 
                      solver = "solnp", solver.control = list(), fit.control = list(), 
@@ -387,6 +388,5 @@ bootstrap = function(fitORspec, data = NULL, n.ahead = 10,
   
 }
 ```
-
 
 ## References

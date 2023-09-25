@@ -15,20 +15,21 @@ library(gganimate)
 
 To simulate a Brownian motion sample path $W(t)$ on the interval $[0, T]$ we can adopt the following steps:
 
-1. Choose an integer $n$ and let $\Delta = T/n$, so that $t_{i} = i\Delta t$ for $i = 0, 1,\dots,n$.
+1.  Choose an integer $n$ and let $\Delta = T/n$, so that $t_{i} = i\Delta t$ for $i = 0, 1,\dots,n$.
 
-2. Generate a sequence $\varepsilon_{i},\dots,\varepsilon_{n}$ of iid standard normal rvs:
+2.  Generate a sequence $\varepsilon_{i},\dots,\varepsilon_{n}$ of iid standard normal rvs:
 
-  - Generate a sequence $U_{1}, \dots, U_{n}$ of Uniform r.v.’s in the interval $(0,1)$.
-  
-  - Set $\varepsilon_{i} = \Phi^{-1}(x)$ where $\Phi^{-1}(x)$ is the inverse cumulative distribution of the standard Gaussian distribution.
-  
-  - Set $dWi = \varepsilon_{i} \sqrt{\Delta t}$.
-  
-3. Finally recursively construct the sample path of the BM letting:
-  - $W (0) = 0$;
-  - $W (t_{i}) = W (t_{i-1}) + dWi , \quad i = 1,\dots, n$
-  
+-   Generate a sequence $U_{1}, \dots, U_{n}$ of Uniform r.v.'s in the interval $(0,1)$.
+
+-   Set $\varepsilon_{i} = \Phi^{-1}(x)$ where $\Phi^{-1}(x)$ is the inverse cumulative distribution of the standard Gaussian distribution.
+
+-   Set $dWi = \varepsilon_{i} \sqrt{\Delta t}$.
+
+3.  Finally recursively construct the sample path of the BM letting:
+
+-   $W (0) = 0$;
+-   $W (t_{i}) = W (t_{i-1}) + dWi , \quad i = 1,\dots, n$
+
 ```{r}
 # Simulate increments of the BM setting
 
