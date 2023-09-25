@@ -29,7 +29,7 @@ website:
       # - sidebar:macroeconomics
       # - text: "CV"
       #   file: CV.pdf
-      - text: "Estimation Risk of Conditional Asymmetric Least Squares"
+      - text: "Estimation Risk"
         file: working_paper.pdf
 
   sidebar:
