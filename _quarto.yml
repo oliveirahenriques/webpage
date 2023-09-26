@@ -27,8 +27,8 @@ website:
       # - sidebar:finance
       # - sidebar:graphaday    
       # - sidebar:macroeconomics
-      - text: "CV"
-        file: CV.pdf
+      # - text: "CV"
+      #   file: CV.pdf
       - text: "Estimation Risk"
         file: working_paper.pdf
 
