@@ -34,6 +34,14 @@ website:
 
   sidebar:
   
+      - id: course
+      title: "Courses"
+      contents:
+        - section: 'Data Analytics & Visualization'
+          contents:
+            - Lecture_01_data_analytics_foundations.qmd
+            - Lecture_01_data_analytics_foundations.html
+
     - id: thesis
       title: "Thesis"
       contents:
