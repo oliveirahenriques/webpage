@@ -53,6 +53,8 @@ website:
             - Simulation Results.qmd
             - Empirical Data.qmd
             - Conditional Expected Shortfall.qmd
+            - Lecture_01_data_analytics_foundations.qmd
+            - Lecture_01_data_analytics_foundations.html
 
     # - id: datascience
     #   title: "Data Science"
